@@ -1,26 +1,27 @@
-import { User } from './../models/user.entity';
-import { getRepository } from "typeorm"
-import { NextFunction, Request, Response } from "express"
-
+import { UserService } from "./../services/user.service";
+import { NextFunction, Request, Response } from "express";
 export class UserController {
+  static _userService: UserService;
 
-    private userRepository = getRepository(User)
+  constructor(private userService: UserService) {
+    UserController._userService = userService;
+  }
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.find()
+  static async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await this._userService.getAllUsers();
+      res.status(200).json(users);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async one(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne(request.params.id)
+  static async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await this._userService.createUser(req.body);
+      res.status(201).json(user);
+    } catch (error) {
+      next(error);
     }
-
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.save(request.body)
-    }
-
-    async remove(request: Request, response: Response, next: NextFunction) {
-        let userToRemove = await this.userRepository.findOneBy({ id: request.params.id })
-        await this.userRepository.remove(userToRemove)
-    }
-
+  }
 }
