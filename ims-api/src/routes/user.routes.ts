@@ -1,9 +1,9 @@
-import { UserController } from './../controllers/user.controller';
-import { Router, Request, Response, NextFunction } from "express";
-
+import { createUser, confirmUser } from "./../controllers/user.controller";
+import { Router } from "express";
 export const userRouter: Router = Router({
   strict: true,
 });
 
-userRouter.get("/", UserController.getAll);
-userRouter.post("/", UserController.create);
+userRouter.get("/");
+userRouter.post("/", createUser);
+userRouter.get("/confirm/:confirmationCode", confirmUser);

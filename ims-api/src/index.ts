@@ -1,27 +1,18 @@
-import { userRouter } from "./routes/user.routes";
 import { Database } from "./config/database";
 import "reflect-metadata";
 import dotenv from "dotenv";
+import app from "./app";
 dotenv.config();
-import express, { Application, Request, Response, NextFunction } from "express";
-const app: Application = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-Database.initialize()
-  .then(() => {
-    console.log("Database connection Created");
-
-    app.use("/api/v1/users", userRouter);
-  })
-  .catch((error) => console.log(error));
-
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Hello World!");
-});
-
-
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+async function main() {
+  try {
+    Database.initialize();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+main();

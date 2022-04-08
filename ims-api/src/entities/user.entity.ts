@@ -1,30 +1,45 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne } from "typeorm";
-import { Department } from "./department.entity";
-import { Room } from "./room.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  Column,
+  Generated,
+  UpdateDateColumn,
+} from "typeorm";
+import UserStatus from "../enums/user.enum";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true })
+  @Generated("uuid")
+  userId: string;
 
   @Column()
   username: string;
 
+  @Column({ unique: true })
+  
+  email: string;
+
   @Column()
-  age: number;
+  password: string;
 
   @Column()
   phone: number;
 
-  @Column({unique : true})
-  email: string;
+  @Column()
+  @Generated("uuid")
+  confirmationCode: string;
 
-  // @Column({ default: true })
-  // isActive: boolean;
+  @Column({ default: UserStatus.PENDING })
+  confirmed: number;
 
-  @OneToOne(() => Room, room => room.user )
-  room:Room;
+  @UpdateDateColumn()
+  createAt: Date;
 
-  @ManyToOne(() => Department, department => department.user)
-  department:Department;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
