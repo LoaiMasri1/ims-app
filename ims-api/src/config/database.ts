@@ -1,4 +1,4 @@
-import { User } from "../models/user.entity";
+import { User } from "../entities/user.entity";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
