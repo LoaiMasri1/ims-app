@@ -50,6 +50,7 @@ The General Objectives of the Energy and Natural Resources Authority are charact
 - [Jehad Lefdawy](https://github.com/lefdawyy)
 - [Mohammed Hmouda](https://github.com/mhammadHmouda)
 - [Muthana Abo Alez](https://github.com/muthana-abo-alez1)
+- [Maya Abdoh](https://github.com/maya-abdoh)
  
 
  ## 🛠 Skills
