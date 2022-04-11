@@ -1,3 +1,5 @@
+import { Department } from "./department.entity";
+import { Room } from "./room.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,6 +7,8 @@ import {
   Column,
   Generated,
   UpdateDateColumn,
+  ManyToOne,
+  OneToOne,
 } from "typeorm";
 import UserStatus from "../enums/user.enum";
 
@@ -21,7 +25,6 @@ export class User extends BaseEntity {
   username: string;
 
   @Column({ unique: true })
-  
   email: string;
 
   @Column()
@@ -42,4 +45,10 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => Room, (room) => room.user)
+  room: Room;
+
+  @ManyToOne(() => Department, (department) => department.user)
+  department: Department;
 }
