@@ -11,8 +11,12 @@ export class ItemCategory {
     @PrimaryColumn()
     categoryId: number;
 
+    @Column()
+    numberOfItem: number;
+
     @ManyToOne(() => Item, item => item.itemCategory)
     item: Item;
+
     @ManyToOne(() => Category, category => category.itemCategory)
     category: Category;
 
