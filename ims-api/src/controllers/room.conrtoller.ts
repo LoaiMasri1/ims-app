@@ -3,17 +3,16 @@ import { Request, Response } from "express";
 
 export const updateRoom = async (req: Request, res: Response) => {
     const {id,type} = req.body;
-    const exist = await Room.findOne({ where: { id } });
+    const exist = await Room.findOne({ where:{id} });
     if (!exist) {
       return res.status(400).json({
         message: `Room with id ${id} Not Found`,
       });
     }
-    const updatedate = exist;
+    const room = exist;
     try {
-      updatedate.id=id;
-      updatedate.type=type;
-      updatedate.save();
+      room.type=type;
+      room.save();
         res.status(201).json({
           message: "Room update successfully",
         });
@@ -24,18 +23,38 @@ export const updateRoom = async (req: Request, res: Response) => {
           });
       }
 }
-export const searchRoom = async (req: Request, res: Response) => {
-    const {id,type} = req.body;
-    const exist = await Room.findOne({ where: { id } });
-    if (!exist) {
+export const searchbyType = async (req: Request, res: Response) => {
+    const {type} = req.query as any;
+    const room = await Room.findOne({ where: { type } });
+    if (!room) {
+      return res.status(400).json({
+        message: `it is ${type} not found`,
+      });
+    }
+    try {
+        //res.json(type);
+        res.status(201).json({
+          room
+        });
+      } catch (error) {
+        res.status(500).json({
+            message: "Room search failed",
+            err: error,
+          });
+      }
+  }
+  export const searchbyId = async (req: Request, res: Response) => {
+    const {id} = req.query as any;
+    const room = await Room.findOne({ where: { id } });
+    if (!room) {
       return res.status(400).json({
         message: `Room with id ${id} not found`,
       });
     }
     try {
-        res.json(type);
+        //res.json(room);
         res.status(201).json({
-          message: "Room search successfully",
+          room
         });
       } catch (error) {
         res.status(500).json({
