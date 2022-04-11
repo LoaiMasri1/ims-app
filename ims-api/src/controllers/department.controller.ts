@@ -70,7 +70,7 @@ export const removeDepartment = async (req: Request, res: Response) => {
 }
 export const searchbyName = async (req: Request, res: Response) => {
   const {name} = req.query as any;
-  const department = await Department.findOne({ where: { name:name } });
+  const department = await Department.find({ where: { name:name } });
   if (!department) {
     return res.status(400).json({
       message: `Department with Name ${name} not found`,
