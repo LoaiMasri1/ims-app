@@ -6,6 +6,6 @@ export const CategoryRouter: Router = Router({
 
 
 CategoryRouter.post("/", createCategory )
-CategoryRouter.post("/", updateCategory )
+CategoryRouter.put("/", updateCategory )
 CategoryRouter.delete("/", deleteCategory )
 CategoryRouter.get("/", searchbyId )

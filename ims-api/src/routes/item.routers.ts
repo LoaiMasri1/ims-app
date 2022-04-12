@@ -5,6 +5,6 @@ export const ItemRouter: Router = Router({
 });
 
 ItemRouter.post("/", createItem )
-ItemRouter.post("/", updateItem )
+ItemRouter.put("/", updateItem )
 ItemRouter.delete("/", deleteItem )
 ItemRouter.get("/", searchItem )

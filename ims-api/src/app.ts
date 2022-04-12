@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/user", userRouter);
 app.use("/auth/v1", authRouter);
-app.use("/auth/v1/category", CategoryRouter);
-app.use("/auth/v1/Item", ItemRouter);
+app.use("/api/v1/category", CategoryRouter);
+app.use("/api/v1/Item", ItemRouter);
 
 export default app;
