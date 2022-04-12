@@ -33,11 +33,10 @@ export const updateDepartment = async (req: Request, res: Response) => {
       message: `Department with Name ${name} Not Found`,
     });
   }
-  const department = exist;
   try {
-    department.name=name;
-    department.floorNumber=Number(floor);
-    department.save();
+    exist.name=name;
+    exist.floorNumber=Number(floor);
+    exist.save();
       res.status(201).json({
         message: "Department update successfully",
       });
@@ -77,7 +76,6 @@ export const searchbyName = async (req: Request, res: Response) => {
     });
   }
   try {
-     // res.json(name);
       res.status(201).json({
         department
       });

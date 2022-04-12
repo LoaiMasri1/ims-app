@@ -7,4 +7,4 @@ export const roomRouter: Router = Router({
 
 roomRouter.get("/",searchbyType);
 roomRouter.get("/",searchbyId);
-roomRouter.post("/",updateRoom);
+roomRouter.put("/",updateRoom);

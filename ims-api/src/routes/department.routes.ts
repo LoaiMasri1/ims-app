@@ -5,6 +5,6 @@ export const departmentRouter: Router = Router({
 });
 departmentRouter.get("/search",searchbyName);
 departmentRouter.get("/",searchbyFloor);
-departmentRouter.post("/",updateDepartment);
+departmentRouter.put("/",updateDepartment);
 departmentRouter.post("/",createDepartment);
 departmentRouter.delete("/:name",removeDepartment);

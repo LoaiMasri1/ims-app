@@ -9,10 +9,9 @@ export const updateRoom = async (req: Request, res: Response) => {
         message: `Room with id ${id} Not Found`,
       });
     }
-    const room = exist;
     try {
-      room.type=type;
-      room.save();
+      exist.type=type;
+      exist.save();
         res.status(201).json({
           message: "Room update successfully",
         });
@@ -32,7 +31,6 @@ export const searchbyType = async (req: Request, res: Response) => {
       });
     }
     try {
-        //res.json(type);
         res.status(201).json({
           room
         });
@@ -52,7 +50,6 @@ export const searchbyType = async (req: Request, res: Response) => {
       });
     }
     try {
-        //res.json(room);
         res.status(201).json({
           room
         });
