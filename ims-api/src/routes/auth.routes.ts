@@ -1,7 +1,15 @@
-import { login } from "./../controllers/auth.controller";
+import {
+  login,
+  register,
+  confirmUser,
+  logout,
+} from "./../controllers/auth.controller";
 import { Router } from "express";
-export const authRouter: Router = Router({
+export const AuthRouter: Router = Router({
   strict: true,
 });
 
-authRouter.post("/login", login);
+AuthRouter.post("/login", login);
+AuthRouter.post("/register", register);
+AuthRouter.get("/confirm/:confirmationCode", confirmUser);
+AuthRouter.get("/logout", logout);

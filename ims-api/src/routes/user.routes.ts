@@ -1,12 +1,15 @@
-import { createUser, confirmUser, updateUser, deleteUserbyEmail } from "./../controllers/user.controller";
+import { isAuth } from "./../middlewares/user.middleware";
+import {
+  updateUser,
+  deleteUserbyEmail,
+  searchbyName,
+} from "./../controllers/user.controller";
 import { Router } from "express";
-import { searchbyName } from "../controllers/department.controller";
-export const userRouter: Router = Router({
+
+export const UserRouter: Router = Router({
   strict: true,
 });
 
-userRouter.get("/:username",searchbyName);
-userRouter.post("/", createUser);
-userRouter.put("/", updateUser);
-userRouter.get("/confirm/:confirmationCode", confirmUser);
-userRouter.delete("/", deleteUserbyEmail);
+UserRouter.get("/:username", isAuth, searchbyName);
+UserRouter.put("/", updateUser);
+UserRouter.delete("/", deleteUserbyEmail);

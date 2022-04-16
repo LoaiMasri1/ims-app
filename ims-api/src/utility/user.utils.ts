@@ -11,7 +11,7 @@ const sendConfirmationEmail = async (
     subject: "Confirm your email",
     html: `<h1>Hi ${username}</h1>
     <p>Please confirm your email by clicking the link below</p>
-    <a href="http://localhost:3000/api/v1/user/confirm/${confirmationCode}">Confirm Email</a>
+    <a href="http://localhost:3000/auth/v1/confirm/${confirmationCode}">Confirm Email</a>
     <p>If you did not request this, please ignore this email</p>
     `,
   };

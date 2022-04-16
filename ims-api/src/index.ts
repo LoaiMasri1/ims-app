@@ -1,9 +1,10 @@
+import * as dotenv from "dotenv";
 import { Database } from "./config/database";
 import "reflect-metadata";
-import dotenv from "dotenv";
-import app from "./app";
 dotenv.config();
-const PORT = process.env.PORT || 3000;
+import app from "./app";
+
+const PORT = process.env.PORT || 5000;
 
 async function main() {
   try {
