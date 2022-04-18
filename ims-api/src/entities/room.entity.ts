@@ -1,20 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
+import { ItemRoom } from "./itemroom.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  BaseEntity,
+} from "typeorm";
 import { Department } from "./department.entity";
 import { User } from "./user.entity";
 
 @Entity()
-export class Room {
+export class Room extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   type: string;
 
-  @OneToOne(() => User, user => user.room )
+  @OneToOne(() => User, (user) => user.room)
   @JoinColumn()
-  user:User;
+  user: User;
 
-  @ManyToOne(() => Department, department=>department.room)
-  department:Department;
+  @ManyToOne(() => Department, (department) => department.room)
+  department: Department;
 
+  @OneToMany(() => ItemRoom, (itemRoom) => itemRoom.room)
+  itemRoom: ItemRoom[];
 }

@@ -9,8 +9,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToOne,
+  BeforeInsert,
 } from "typeorm";
 import UserStatus from "../enums/user.enum";
+import * as bcrypt from "bcrypt";
 
 @Entity()
 export class User extends BaseEntity {
@@ -51,4 +53,14 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => Department, (department) => department.user)
   department: Department;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async comparePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
+  }
+
 }
