@@ -1,10 +1,10 @@
 
 import { Router } from "express";
 import {searchbyId, searchbyType, updateRoom } from "../controllers/room.conrtoller";
-export const roomRouter: Router = Router({
+export const RoomRouter: Router = Router({
   strict: true,
 });
 
-roomRouter.get("/",searchbyType);
-roomRouter.get("/",searchbyId);
-roomRouter.put("/",updateRoom);
+RoomRouter.get("/", searchbyType);
+RoomRouter.get("/", searchbyId);
+RoomRouter.put("/", updateRoom);
