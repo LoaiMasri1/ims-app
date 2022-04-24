@@ -14,6 +14,13 @@ import {
 import UserStatus from "../enums/user.enum";
 import * as bcrypt from "bcrypt";
 
+import{
+  IsNotEmpty,
+  IsEmail,
+  Matches,
+  IsPhoneNumber,
+} from "class-validator";
+
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -24,16 +31,34 @@ export class User extends BaseEntity {
   userId: string;
 
   @Column()
+  @IsNotEmpty({
+    message: 'please enter username',
+  })
   username: string;
 
   @Column({ unique: true })
+  @IsNotEmpty({
+    message: 'please enter email',
+  })
+  @IsEmail()
   email: string;
 
   @Column()
+  @IsNotEmpty({
+    message: 'please enter password',
+  })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/, {
+    message:
+      'Password must contain uppercase and lowercase characters, minimum character length 8, maximum 20',
+  })
   password: string;
 
-  @Column()
-  phone: number;
+  @Column({ unique: true })
+  @IsPhoneNumber()
+  @IsNotEmpty({
+    message: 'please enter phone number',
+  })
+  phone:string;
 
   @Column()
   @Generated("uuid")
@@ -64,3 +89,6 @@ export class User extends BaseEntity {
   }
 
 }
+
+
+

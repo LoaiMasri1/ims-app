@@ -1,6 +1,6 @@
 import transporter from "../config/nodemailer";
 
-const sendConfirmationEmail = async (
+export const sendConfirmationEmail = async (
   username: string,
   email: string,
   confirmationCode: string
@@ -23,5 +23,8 @@ const sendConfirmationEmail = async (
     }
   });
 };
-
-export default sendConfirmationEmail;
+export function objToString (obj:any) {
+  return Object.entries(obj).reduce((str, [p, val]) => {
+      return `${val}`;
+  }, '');
+}
