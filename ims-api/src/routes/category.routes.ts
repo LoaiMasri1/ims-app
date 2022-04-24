@@ -2,14 +2,25 @@ import { Router } from "express";
 import {
   createCategory,
   deleteCategory,
-  searchbyId,
+  getAllCategory,
+  updateCategoryNotId,
+  searchById,
+  getSubOfCategory,
+  deleteAllCategory,
+  getMainOfCategory,
   updateCategory,
 } from "../controllers/category.controller";
+import { searchbyId } from "../controllers/room.conrtoller";
 export const CategoryRouter: Router = Router({
   strict: true,
 });
 
 CategoryRouter.post("/", createCategory);
-CategoryRouter.put("/", updateCategory);
-CategoryRouter.delete("/", deleteCategory);
-CategoryRouter.get("/", searchbyId);
+CategoryRouter.put("/", updateCategoryNotId);
+CategoryRouter.put("/:id", updateCategory);
+CategoryRouter.delete("/:id", deleteCategory);
+CategoryRouter.delete("/", deleteAllCategory);
+CategoryRouter.get("/", getAllCategory);
+CategoryRouter.get("/:id", searchById);
+CategoryRouter.get("/subClassification/:sub", getSubOfCategory);
+CategoryRouter.get("/mainClassification/:main", getMainOfCategory);
