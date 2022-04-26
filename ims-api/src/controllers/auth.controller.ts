@@ -1,9 +1,9 @@
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
-import {sendConfirmationEmail, objToString} from "../utility/user.utils";
+import { sendConfirmationEmail, objToString } from "../utility/user.utils";
 import * as jwt from "jsonwebtoken";
 import UserStatus from "../enums/user.enum";
-import {validate} from "class-validator"
+import { validate } from "class-validator";
 
 export const login = async (req: Request, res: Response) => {
   if (req.cookies.token) {
@@ -21,9 +21,13 @@ export const login = async (req: Request, res: Response) => {
     });
   }
   if (!user.confirmed) {
-    sendConfirmationEmail(user.username, user.email, user.confirmationCode);
+    await sendConfirmationEmail(
+      user.username,
+      user.email,
+      user.confirmationCode
+    );
     return res.status(400).json({
-      message: "User not confirmed , please check your email",
+      message: "Please confirm your email",
     });
   }
 
@@ -65,42 +69,39 @@ export const register = async (req: Request, res: Response) => {
     });
   }
   if (userPhone) {
-      return res.status(400).json({
-        message: `User with phone ${phone} already exist`,
-      });
-    }
+    return res.status(400).json({
+      message: `User with phone ${phone} already exist`,
+    });
+  }
   try {
-    const newUser =  new User()
+    const newUser = new User();
     newUser.username = username;
     newUser.email = email;
     newUser.password = password;
     newUser.phone = phone;
-    
 
-    validate(newUser).then(errors => {
+    validate(newUser).then((errors) => {
       // errors is an array of validation errors
-      
+
       if (errors.length > 0) {
-        const {constraints} = errors[0]
+        const { constraints } = errors[0];
         res.status(422).json({
           message: objToString(constraints),
         });
       } else {
-        console.log('validation succeed');
+        console.log("validation succeed");
         newUser.save();
         sendConfirmationEmail(
-      newUser.username,
-      newUser.email,
-      newUser.confirmationCode
-    );
-    res.status(201).json({
-      message: "User created successfully, please check your email",
-    });
-  
+          newUser.username,
+          newUser.email,
+          newUser.confirmationCode
+        );
+        res.status(201).json({
+          message: "User created successfully, please check your email",
+        });
       }
     });
-  }
-     catch (error) {
+  } catch (error) {
     res.status(500).json({
       message: "User creation failed",
       err: error,

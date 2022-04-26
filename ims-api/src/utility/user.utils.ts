@@ -17,14 +17,14 @@ export const sendConfirmationEmail = async (
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      console.error(error);
     } else {
       console.log("Email sent: " + info.response);
     }
   });
 };
-export function objToString (obj:any) {
+export function objToString(obj: any) {
   return Object.entries(obj).reduce((str, [p, val]) => {
-      return `${val}`;
-  }, '');
+    return `${val}`;
+  }, "");
 }

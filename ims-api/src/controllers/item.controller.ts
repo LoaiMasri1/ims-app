@@ -132,7 +132,7 @@ export const createItem = async (req: Request, res: Response) => {
         message: `item with name ${name} not found`,
       });
     }
-    const category = await Category.findOne({ where: { categoryId } });
+    const category = await Category.findOne({ where: { id: categoryId } });
     if (!category) {
       return res.status(400).json({
         message: `category with id ${categoryId} not found`,

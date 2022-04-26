@@ -3,14 +3,16 @@ import {
   createDepartment,
   removeDepartment,
   searchbyFloor,
-  searchbyName,
+  searchbyId,
   updateDepartment,
+  getAll,
 } from "../controllers/department.controller";
 export const DepartmentRouter: Router = Router({
   strict: true,
 });
-DepartmentRouter.get("/search", searchbyName);
-DepartmentRouter.get("/", searchbyFloor);
-DepartmentRouter.put("/", updateDepartment);
+DepartmentRouter.get("/:id", searchbyId);
+//DepartmentRouter.get("/:floor", searchbyFloor);
+DepartmentRouter.put("/:id", updateDepartment);
 DepartmentRouter.post("/", createDepartment);
-DepartmentRouter.delete("/:name", removeDepartment);
+DepartmentRouter.get("/", getAll);
+DepartmentRouter.delete("/:id", removeDepartment);
