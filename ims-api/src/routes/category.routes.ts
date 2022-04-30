@@ -10,7 +10,6 @@ import {
   getMainOfCategory,
   updateCategory,
 } from "../controllers/category.controller";
-import { searchbyId } from "../controllers/room.conrtoller";
 export const CategoryRouter: Router = Router({
   strict: true,
 });
