@@ -11,14 +11,14 @@ import {
 export const ItemRouter: Router = Router({
   strict: true,
 });
-ItemRouter.post("/:name", createItem);
+ItemRouter.post("/", createItem);
 ItemRouter.put("/:name", updateItem);
-ItemRouter.delete("/:name", deleteItem);
-ItemRouter.get("/:name", searchItem);
+ItemRouter.delete("/", deleteItem);
+//ItemRouter.get("/:name", searchItem);
 ItemRouter.get("/:id", SearchItemById);
 ItemRouter.delete("/:id", deleteItembyid);
 ItemRouter.get("/", getAllItem);
-ItemRouter.get("/:id/category/categoryId",updateCategorybyItem);
+//ItemRouter.get("/:id/category/categoryId",updateCategorybyItem);
 
 
 
