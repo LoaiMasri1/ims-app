@@ -1,5 +1,6 @@
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
+import { Department } from "../entities/department.entity";
 
 export const deleteUserbyEmail = async (req: Request, res: Response) => {
   const { email } = req.params;
@@ -23,7 +24,7 @@ export const deleteUserbyEmail = async (req: Request, res: Response) => {
 };
 export const SearchById =async (req: Request, res: Response) => {
   const { id  } = req.params as any;
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findOne({select: ['id', 'username', 'email', 'phone'] , where: { id }, relations: {department: true}, loadRelationIds: true });
   if(!user){
     return res.status(400).json({
       message: `user with this id ${id} not found`,
@@ -114,17 +115,25 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 export const Updateuser = async (req: Request, res: Response) => {
-  const { username, email,  phone ,id } = req.params as any;
+  const { id } = req.params as any;
+  const { username, email,  phone ,departmentId } = req.body;
+  const department = await Department.findOne({ where: { id:departmentId } })
   const user = await User.findOne({ where: { id } });
   if (!user) {
     return res.status(400).json({
       message: `user with id ${id} not found`,
     });
   }
+  if(!department) {
+    return res.status(400).json({
+      message: `department with id ${departmentId} not found`,
+    });
+  }
   try {
     user.username =username ;
     user.email = email;
     user.phone =phone ;
+    user.department = department;
     await user.save();
     res.status(201).json({
       message: "user update successfully",
@@ -137,7 +146,8 @@ export const Updateuser = async (req: Request, res: Response) => {
   }
 };
 export const getAllUser =async (req: Request, res: Response) => {
-  const user = await User.find();
+  const user = await User.find({ select: ['id', 'username', 'email', 'phone'],
+                                relations: {department: true}, loadRelationIds: true});
   if(!user){
     return res.status(400).json({
       message: `not found any user`,

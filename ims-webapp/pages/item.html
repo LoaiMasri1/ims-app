@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department</title>
+    <title>Ietm</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css"
@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.css" />
 
-    <link rel="stylesheet" href="../css/department.css">
+    <link rel="stylesheet" href="../css/item.css">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Department</h5>
+                    <h5 class="modal-title">Add Ietm</h5>
                     <button type="button" class="close btn" onclick="$('#addModal').modal('hide')">
                         <i class="fa fa-close"></i>
                     </button>
@@ -39,20 +39,18 @@
                             <label class="form-label" for="name">Name</label>
                             <input type="text" id="name" class="form-control" name="name" required />
                         </div>
-    
                         <div class="form-outline mb-4">
-                            <label class="form-label" for="floor">Floor Number</label>
-                            <input type="number" id="floor" class="form-control" name="floor" required />
+                            <label class="form-label" for="categoryId">CategoryId</label>
+                            <input type="number" id="categoryId" class="form-control" name="categoryId" required />
                         </div>
-    
                         <div class="form-outline mb-4 text-center">
                             <button type="submit" class="btn btn-primary w-50">Add
-                                Department</button>
+                                Ietm</button>
                         </div>
                         <div class="form-outline mb-4 text-center" id="add-success"></div>
                         <div class="form-outline mb-4 text-center" id="add-errors"></div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -63,7 +61,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Department</h5>
+                    <h5 class="modal-title">Edit Ietm</h5>
                     <button type="button" class="close btn" onclick="$('#editModal').modal('hide')">
                         <i class="fa fa-close"></i>
                     </button>
@@ -80,15 +78,13 @@
                             <label class="form-label" for="name">Name</label>
                             <input type="text" id="name" class="form-control" name="name" required />
                         </div>
-
                         <div class="form-outline mb-4">
-                            <label class="form-label" for="floor">Floor Number</label>
-                            <input type="number" id="floor" class="form-control" name="floor" required />
+                            <label class="form-label" for="categoryId">CategoryId</label>
+                            <input type="number" id="categoryId" class="form-control" name="categoryId" required />
                         </div>
-
                         <div class="form-outline mb-4 text-center">
                             <button type="submit" class="btn btn-primary w-50">Add
-                                Department</button>
+                                Ietm</button>
                         </div>
                         <div class="form-outline mb-4 text-center" id="edit-success"></div>
                         <div class="form-outline mb-4 text-center" id="edit-errors"></div>
@@ -117,8 +113,8 @@
         src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.js"></script>
 
     <!--==========================-->
-    <script type="module" src="../scripts/department/initTable.js"></script>
-    <script type="module" src="../scripts/department/main.js"></script>
+    <script type="module" src="../scripts/item/init.Table.js"></script>
+    <script type="module" src="../scripts/item/main.js"></script>
 </body>
 
 </html>
