@@ -1,6 +1,10 @@
-export const BASE_URL = "http://localhost:3000/api/v1/";
+const PORT=5000;
+export const BASE_URL = `http://localhost:${PORT}/api/v1/`;
+const AUTH_URL = `http://localhost:${PORT}/auth/v1/`;
 export const DEPARTMENT_URL = BASE_URL + "department";
-const AUTH_URL = "http://localhost:3000/auth/v1/"
 export const REGISTER_URL = AUTH_URL + "register";
 export const USER_URL = BASE_URL + "user";
+export const ITEM_URL = BASE_URL + "item";
+export const CATEGORY_URL = BASE_URL + "category";
+
 export const DELAY = 3000;
