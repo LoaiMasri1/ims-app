@@ -5,7 +5,7 @@ export const RoomRouter: Router = Router({
   strict: true,
 });
 
-RoomRouter.get("/:type", searchbyType);
+RoomRouter.get("/type/:type", searchbyType);
 RoomRouter.get("/:id", searchbyId);
 RoomRouter.put("/:id", updateRoom);
 RoomRouter.post("/", createRoom);

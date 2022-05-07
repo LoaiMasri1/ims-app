@@ -1,15 +1,15 @@
-import { DEPARTMENT_URL, DELAY } from "../settings/settings.js";
+import {ITEM_URL, DELAY } from "../settings/settings.js";
 
 $("#add-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
       name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+      categoryId:form.find("#categoryId").val(),
     };
 
   $.ajax({
-    url: DEPARTMENT_URL,
+    url: ITEM_URL,
     method: "POST",
     data: data,
     success: function (data) {
@@ -40,10 +40,10 @@ $("#edit-form").submit(function (e) {
   const form = $(this),
     data = {
       name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+      categoryId:form.find("#categoryId").val(),
     };
   $.ajax({
-    url: `${DEPARTMENT_URL}/${form.find("#id").val()}`,
+    url: `${ITEM_URL}/${form.find("#id").val()}`,
     method: "PUT",
     data: data,
     success: function (data) {
@@ -59,7 +59,7 @@ $("#edit-form").submit(function (e) {
     },
     error: function (data) {
       $("#edit-errors").append(`<div class="alert alert-danger" role="alert">
-                            <strong>Error!</strong> ${data.responseJSON.message}</div>`);
+                           <strong>Error!</strong> ${data.responseJSON.message}</div>`);
       console.error(data.responseJSON.message);
       setTimeout(function () {
         $("#edit-errors").empty();

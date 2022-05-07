@@ -1,15 +1,17 @@
-import { DEPARTMENT_URL, DELAY } from "../settings/settings.js";
+import { REGISTER_URL, USER_URL, DELAY } from "../settings/settings.js";
 
 $("#add-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-      name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+      username: form.find("#userName").val(),
+      email: form.find("#email").val(),
+      password: form.find("#password").val(),
+      phone: form.find("#phone").val(),
     };
-
+console.log(data);
   $.ajax({
-    url: DEPARTMENT_URL,
+    url: REGISTER_URL,
     method: "POST",
     data: data,
     success: function (data) {
@@ -28,7 +30,7 @@ $("#add-form").submit(function (e) {
                             <strong>Error!</strong> ${data.responseJSON.message}</div>`);
 
       setTimeout(function () {
-        $("#add-errors").empty();
+        $("#errors").empty();
       }, DELAY);
       console.error(data.responseJSON.message);
     },
@@ -39,11 +41,13 @@ $("#edit-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-      name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+        username: form.find("#userName").val(),
+        email: form.find("#email").val(),
+        phone: form.find("#phone").val(),
+        departmentId: form.find("departmentId").val()
     };
   $.ajax({
-    url: `${DEPARTMENT_URL}/${form.find("#id").val()}`,
+    url: `${USER_URL}/${form.find("#id").val()}`,
     method: "PUT",
     data: data,
     success: function (data) {

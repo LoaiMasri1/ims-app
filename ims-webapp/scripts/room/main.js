@@ -1,15 +1,16 @@
-import { DEPARTMENT_URL, DELAY } from "../settings/settings.js";
+import { ROOM_URL, DELAY } from "../settings/settings.js";
 
 $("#add-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-      name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+      type: form.find("#type").val(),
+      userId: form.find("#user").val(),
+      departmentId: form.find("#department").val(),
     };
 
   $.ajax({
-    url: DEPARTMENT_URL,
+    url: ROOM_URL,
     method: "POST",
     data: data,
     success: function (data) {
@@ -30,7 +31,7 @@ $("#add-form").submit(function (e) {
       setTimeout(function () {
         $("#add-errors").empty();
       }, DELAY);
-      console.error(data.responseJSON.message);
+      console.error(data.responseJSON);
     },
   });
 });
@@ -39,11 +40,12 @@ $("#edit-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-      name: form.find("#name").val(),
-      floor: form.find("#floor").val(),
+        type: form.find("#type").val(),
+        userId: form.find("#user").val(),
+        departmentId: form.find("#department").val(),
     };
   $.ajax({
-    url: `${DEPARTMENT_URL}/${form.find("#id").val()}`,
+    url: `${ROOM_URL}/${form.find("#id").val()}`,
     method: "PUT",
     data: data,
     success: function (data) {
