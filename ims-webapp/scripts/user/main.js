@@ -9,7 +9,7 @@ $("#add-form").submit(function (e) {
       password: form.find("#password").val(),
       phone: form.find("#phone").val(),
     };
-console.log(data);
+  console.log(data);
   $.ajax({
     url: REGISTER_URL,
     method: "POST",
@@ -41,10 +41,10 @@ $("#edit-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-        username: form.find("#userName").val(),
-        email: form.find("#email").val(),
-        phone: form.find("#phone").val(),
-        departmentId: form.find("departmentId").val()
+      username: form.find("#userName").val(),
+      email: form.find("#email").val(),
+      phone: form.find("#phone").val(),
+      departmentId: form.find("departmentId").val(),
     };
   $.ajax({
     url: `${USER_URL}/${form.find("#id").val()}`,

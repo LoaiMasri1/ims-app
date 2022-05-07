@@ -2,6 +2,7 @@ import { DELAY, REGISTER_URL } from "../settings/settings.js";
 
 function registerUser(e) {
   e.preventDefault();
+  console.log(123);
   const form = e.target;
   const data = {
     username: form.username.value,
@@ -33,3 +34,5 @@ function registerUser(e) {
     },
   });
 }
+
+$("#register-form").submit(registerUser);

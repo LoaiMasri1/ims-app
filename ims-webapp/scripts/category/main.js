@@ -1,5 +1,9 @@
 import {CATEGORY_URL, DELAY } from "../settings/settings.js";
 
+
+
+
+
 $("#add-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),

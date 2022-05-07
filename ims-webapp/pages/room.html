@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department</title>
+    <title>Room</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css"
@@ -19,6 +19,54 @@
 </head>
 
 <body>
+
+    <nav class="navbar navbar-expand-md navbar-light py-3 px-1">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fa fa-shopping-bag text-primary"></i>
+                <span class="text-uppercase text-primary m-2 fw-bold font-monospace" style="font-size: 24px;">IMS</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav container">
+                    <li class="nav-item">
+                        <a class="nav-link" href="item.html">Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="department.html">Department</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user.html">User</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="category.html">Category</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="room.html">Room</a>
+                    </li>
+
+                    <li class="nav-item dropdown ms-sm-0 ms-md-auto ">
+                        <a class="nav-link dropdown-toggle d-lg-flex align-items-lg-center text-primary" href="#"
+                            id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-gear text-primary fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><button class="dropdown-item"
+                                    onclick="localStorage.clear('token');window.location.href = 'login.html';">LogOut</button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
     <div class="container mt-5">
         <table id="myTable" class="table table-responsive"></table>
     </div>

@@ -3,7 +3,7 @@ import { DELAY, LOGIN_URL } from "../settings/settings.js";
 let token = localStorage.getItem("token");
 
 if (token) {
-  window.location.href = "department.html";
+  window.location.href = "item.html";
 }
 
 $("#login-form").on("submit", loginUser);

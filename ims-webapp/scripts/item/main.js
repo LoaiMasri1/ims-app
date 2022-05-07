@@ -1,11 +1,13 @@
-import {ITEM_URL, DELAY } from "../settings/settings.js";
+import { ITEM_URL, DELAY } from "../settings/settings.js";
+
+
 
 $("#add-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
       name: form.find("#name").val(),
-      categoryId:form.find("#categoryId").val(),
+      categoryId: form.find("#categoryId").val(),
     };
 
   $.ajax({
@@ -40,7 +42,7 @@ $("#edit-form").submit(function (e) {
   const form = $(this),
     data = {
       name: form.find("#name").val(),
-      categoryId:form.find("#categoryId").val(),
+      categoryId: form.find("#categoryId").val(),
     };
   $.ajax({
     url: `${ITEM_URL}/${form.find("#id").val()}`,

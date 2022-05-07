@@ -3,7 +3,9 @@ import { Request, Response } from "express";
 
 export const createCategory = async (req: Request, res: Response) => {
   const { mainClassification, subClassification } = req.body;
-  const exist = await Category.findOne({ where: { mainClassification, subClassification },loadRelationIds: true });
+  const exist = await Category.findOne({
+    where: { mainClassification, subClassification },
+  });
   if (exist) {
     return res.status(400).json({
       message: `category found`,
@@ -26,7 +28,10 @@ export const createCategory = async (req: Request, res: Response) => {
 };
 export const deleteCategory = async (req: Request, res: Response) => {
   const { id } = req.params as any;
-  const category = await Category.findOne({ where: { id } , loadRelationIds: true  });
+  const category = await Category.findOne({
+    where: { id },
+    loadRelationIds: true,
+  });
   if (!category) {
     return res.status(400).json({
       message: `category with id ${id} not found`,
@@ -46,7 +51,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
 };
 
 export const deleteAllCategory = async (req: Request, res: Response) => {
-  const category = await Category.find({loadRelationIds: true })
+  const category = await Category.find();
   if (!category.length) {
     return res.status(400).json({
       message: `Not found any category`,
@@ -90,7 +95,10 @@ export const updateCategoryNotId = async (req: Request, res: Response) => {
 export const updateCategory = async (req: Request, res: Response) => {
   const { id } = req.params as any;
   const { mainClassification, subClassification } = req.body;
-  const category = await Category.findOne({ where: { id }, loadRelationIds: true  });
+  const category = await Category.findOne({
+    where: { id },
+    loadRelationIds: true,
+  });
   if (!category) {
     return res.status(400).json({
       message: `category with id ${id} not found`,
@@ -112,7 +120,10 @@ export const updateCategory = async (req: Request, res: Response) => {
 };
 export const searchById = async (req: Request, res: Response) => {
   const { id } = req.params as any;
-  const category = await Category.find({ where: { id }, loadRelationIds: true  });
+  const category = await Category.find({
+    where: { id },
+    loadRelationIds: true,
+  });
   if (!category.length) {
     return res.status(400).json({
       message: `category with id ${id} not found`,
@@ -130,7 +141,7 @@ export const searchById = async (req: Request, res: Response) => {
   }
 };
 export const getAllCategory = async (req: Request, res: Response) => {
-  const category = await Category.find({loadRelationIds: true});
+  const category = await Category.find();
   if (!category) {
     return res.status(400).json({
       message: `No any category found`,
@@ -150,7 +161,10 @@ export const getAllCategory = async (req: Request, res: Response) => {
 
 export const getSubOfCategory = async (req: Request, res: Response) => {
   const { sub } = req.params as any;
-  const category = await Category.find({ where: { subClassification: sub }, select: ['mainClassification', 'subClassification'], });
+  const category = await Category.find({
+    where: { subClassification: sub },
+    select: ["mainClassification", "subClassification"],
+  });
   if (!category.length) {
     return res.status(400).json({
       message: `No category of the subClassification ${sub} found!`,
@@ -166,11 +180,14 @@ export const getSubOfCategory = async (req: Request, res: Response) => {
       err: error,
     });
   }
-}
+};
 
 export const getMainOfCategory = async (req: Request, res: Response) => {
   const { main } = req.params as any;
-  const category = await Category.find({ where: { mainClassification: main }, select: ['mainClassification', 'subClassification'], });
+  const category = await Category.find({
+    where: { mainClassification: main },
+    select: ["mainClassification", "subClassification"],
+  });
   if (!category.length) {
     return res.status(400).json({
       message: `No category of the classClassification ${main} found!`,
@@ -186,4 +203,4 @@ export const getMainOfCategory = async (req: Request, res: Response) => {
       err: error,
     });
   }
-}
+};

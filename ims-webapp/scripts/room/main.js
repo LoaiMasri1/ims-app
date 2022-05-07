@@ -1,4 +1,6 @@
 import { ROOM_URL, DELAY } from "../settings/settings.js";
+let token = localStorage.getItem("token");
+
 
 $("#add-form").submit(function (e) {
   e.preventDefault();
@@ -40,9 +42,9 @@ $("#edit-form").submit(function (e) {
   e.preventDefault();
   const form = $(this),
     data = {
-        type: form.find("#type").val(),
-        userId: form.find("#user").val(),
-        departmentId: form.find("#department").val(),
+      type: form.find("#type").val(),
+      userId: form.find("#user").val(),
+      departmentId: form.find("#department").val(),
     };
   $.ajax({
     url: `${ROOM_URL}/${form.find("#id").val()}`,

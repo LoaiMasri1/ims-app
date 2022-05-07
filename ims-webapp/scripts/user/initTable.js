@@ -10,6 +10,7 @@ $(document).ready(function () {
     success: function (data) {
       const title = "User",
         { user } = data;
+      console.log(user);
       let html = `
                     <thead>
                         <tr class="text-center">
@@ -30,12 +31,16 @@ $(document).ready(function () {
                                     <td>${user.username}</td>
                                     <td>${user.email}</td>
                                     <td>${user.phone}</td>
-                                    <td>${user.department.name}</td>
+                                    <td>${user.department?.name || null}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="window._user.editUser(${user.id})">
+                                        <button class="btn btn-primary btn-sm" onclick="window._user.editUser(${
+                                          user.id
+                                        })">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="window._user.deleteUser(${user.id})">
+                                        <button class="btn btn-danger btn-sm" onclick="window._user.deleteUser(${
+                                          user.id
+                                        })">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
