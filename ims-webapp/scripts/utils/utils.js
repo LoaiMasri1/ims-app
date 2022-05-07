@@ -1,4 +1,4 @@
-import { DEPARTMENT_URL,ITEM_URL,CATEGORY_URL,USER_URL } from "../settings/settings.js";
+import { DEPARTMENT_URL,ITEM_URL,CATEGORY_URL,USER_URL, ROOM_URL } from "../settings/settings.js";
 
 export function deleteCategory(id) {
   if (confirm("Are you sure you want to delete this category?")) {
@@ -37,6 +37,7 @@ export function editCategory(id) {
     },
   });
 }
+
 
 
 
@@ -134,6 +135,40 @@ export function editDepartment(id) {
   });
 }
 
+
+export function deleteRoom(id) {
+  if (confirm("Are you sure you want to delete this room?")) {
+    $.ajax({
+      url: `${ROOM_URL}/${id}`,
+      method: "DELETE",
+      success: function (data) {
+        alert(data.message);
+        location.reload();
+      },
+      error: function (data) {
+        alert(data.responseJSON.message);
+        console.error(data.responseJSON.message);
+      },
+    });
+  }
+}
+
+export function editRoom(id) {
+  $("#edit-form")[0].reset();
+  $.ajax({
+    url: `${ROOM_URL}/${id}`,
+    method: "GET",
+    dataType: "json",
+    success: function (data) {
+      let { room } = data;
+      $("#edit-form")[0].reset();
+      $("#edit-form").find("#id").val(room.id);
+      $("#edit-form").find("#type").val(room.type);
+      $("#edit-form").find("#user").val(room.user);
+      $("#edit-form").find("#department").val(room.department);
+      $("#editModal").modal("show");
+      console.log(data)
+
 export function editUser(id) {
   $("#edit-form")[0].reset();
   console.log(id);
@@ -150,6 +185,7 @@ export function editUser(id) {
       $("#edit-form").find("#phone").val(user.phone);
       $("#edit-form").find("#departmentId").val(user.department.id);
       $("#editModal").modal("show");
+
     },
     error: function (data) {
       alert(data.responseJSON.message);
