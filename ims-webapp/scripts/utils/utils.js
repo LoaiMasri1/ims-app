@@ -1,4 +1,44 @@
-import { DEPARTMENT_URL,ITEM_URL } from "../settings/settings.js";
+
+import { DEPARTMENT_URL,ITEM_URL,CATEGORY_URL } from "../settings/settings.js";
+
+export function deleteCategory(id) {
+  if (confirm("Are you sure you want to delete this category?")) {
+    $.ajax({
+      url: `${CATEGORY_URL}/${id}`,
+      method: "DELETE",
+      success: function (data) {
+        alert(data.message);
+        location.reload();
+      },
+      error: function (data) {
+        alert(data.responseJSON.message);
+        console.error(data.responseJSON.message);
+      },
+    });
+  }
+}
+export function editCategory(id) {
+  $("#edit-form")[0].reset();
+
+  $.ajax({
+    url: `${CATEGORY_URL}/${id}`,
+    method: "GET",
+    dataType: "json",
+    success: function (data) {
+      let { category } = data;
+      $("#edit-form")[0].reset();
+      $("#edit-form").find("#id").val(category.id);
+      $("#edit-form").find("#mainClassification").val(category.mainClassification);
+      $("#edit-form").find("#subClassification").val(category.subClassification);
+      $("#editModal").modal("show");
+    },
+    error: function (data) {
+      alert(data.responseJSON.message);
+      console.error(data.responseJSON.message);
+    },
+  });
+}
+
 
 export function deleteDepartment(id) {
   if (confirm("Are you sure you want to delete this department?")) {
