@@ -33,6 +33,14 @@ export const updateDepartment = async (req: Request, res: Response) => {
       message: `Department with id ${id} Not Found`,
     });
   }
+
+  const ExistName = await Department.findOne({ where: { name } });
+  if (ExistName) {
+    return res.status(400).json({
+      message: `Department with Name ${name} already exist`,
+    });
+  }
+
   try {
     exist.name = name;
     exist.floorNumber = Number(floor);

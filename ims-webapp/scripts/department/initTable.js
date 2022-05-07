@@ -1,4 +1,4 @@
-import { deleteDepartment, editDepartment } from "../utils/utils.js";
+import { addDepartment, deleteDepartment, editDepartment } from "./main.js";
 window._department = { deleteDepartment, editDepartment };
 import { DEPARTMENT_URL } from "../settings/settings.js";
 
@@ -7,6 +7,12 @@ $(document).ready(function () {
     url: DEPARTMENT_URL,
     method: "GET",
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(
+        "authorization",
+        "Bearer " + localStorage.getItem("token")
+      );
+    },
     success: function (data) {
       const title = "Department",
         { department } = data;
@@ -92,13 +98,13 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: function () {
-              // show modal
-              $("#addModal").modal("show");
-            },
+            action: addDepartment,
           },
         ],
       });
+    },
+    error: function (err) {
+      Swal.fire("Error", "Please Try To Login Again Later", "error");
     },
   });
 });

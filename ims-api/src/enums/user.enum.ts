@@ -1,6 +1,9 @@
-enum UserStatus {
+export enum UserStatus {
   VERIFIED = 1,
   PENDING = 0,
 }
 
-export default UserStatus;
+export enum UserRole {
+  ADMIN = 1,
+  USER = 0,
+}
