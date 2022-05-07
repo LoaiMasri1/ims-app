@@ -10,13 +10,12 @@ import {
   getMainOfCategory,
   updateCategory,
 } from "../controllers/category.controller";
-
 export const CategoryRouter: Router = Router({
   strict: true,
 });
 
 CategoryRouter.post("/", createCategory);
-CategoryRouter.put("/", updateCategoryNotId);
+//CategoryRouter.put("/", updateCategoryNotId);
 CategoryRouter.put("/:id", updateCategory);
 CategoryRouter.delete("/:id", deleteCategory);
 CategoryRouter.delete("/", deleteAllCategory);

@@ -4,17 +4,19 @@ import { Category } from "../entities/category.entity";
 
 
 export const createItem = async (req: Request, res: Response) => {
-    const { name  } = req.params as any;
+    //const {name} = req.params as any;
+    const{categoryId,name}=req.body as any;
     const exist = await Item.findOne({ where: { name } });
-    if (!exist) {
+    if (exist) {
       return res.status(400).json({
-        message: `item with name ${name} not found`,
+        message: `item with name ${name} already exist`, 
       });
     }
     try {
       const item =new Item();
       item.name=name;
-       await item.save();
+      item.category =categoryId;
+      await item.save();
       res.status(201).json({
         message: "item created successfully",
       });
@@ -46,15 +48,23 @@ export const createItem = async (req: Request, res: Response) => {
     }
   };
   export const updateItem = async (req: Request, res: Response) => {
-    const { name  } = req.params as any;
-    const item = await Item.findOne({ where: { name } });
+    const { id } = req.params as any;
+    const { categoryId,name  } = req.body as any;
+    const item = await Item.findOne({ where: { id } });
+    const category = await Category.findOne({ where: { id:categoryId } });
     if (!item) {
       return res.status(400).json({
-        message: `item with name ${name} not found`,
+        message: `item with id ${id} not found`,
+      });
+    }
+    if (!category) {
+      return res.status(400).json({
+        message: `category with id ${categoryId} not found`,
       });
     }
     try {
       item.name=name;
+      item.category=categoryId;
       await item.save();
       res.status(201).json({
         message: "item update successfully",
@@ -88,7 +98,7 @@ export const createItem = async (req: Request, res: Response) => {
   };
   export const SearchItemById =async (req: Request, res: Response) => {
     const { id } = req.params as any;
-    const item = await Item.findOne({ where: { id } });
+    const item = await Item.findOne({ where: { id }, relations: {category: true}, loadRelationIds: true });
     if(!item){
       return res.status(400).json({
         message: `item with this id ${id} not found`,
@@ -106,7 +116,7 @@ export const createItem = async (req: Request, res: Response) => {
   };
   export const deleteItembyid = async (req: Request, res: Response) => {
     const { id } = req.params as any;
-    const item = await Item.findOne({ where: { id } });
+    const item = await Item.findOne({ where: { id }, relations: {category: true}, loadRelationIds: true });
     if (!item) {
       return res.status(400).json({
         message: `item with id ${id} not found`,
@@ -139,8 +149,8 @@ export const createItem = async (req: Request, res: Response) => {
       });
     }
     try {
+      item.name=name;
       item.category =category;
-
       await item.save();
       res.status(201).json({
         message: "item update successfully",
@@ -153,7 +163,7 @@ export const createItem = async (req: Request, res: Response) => {
     }
   };
   export const getAllItem =async (req: Request, res: Response) => {
-    const item = await Item.find();
+    const item = await Item.find({ relations: {category: true}, loadRelationIds: true });;
     if(!item){
       return res.status(400).json({
         message: `not found any item`,

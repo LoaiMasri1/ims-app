@@ -14,11 +14,11 @@ export const UserRouter: Router = Router({
   strict: true,
 });
 
-UserRouter.get("/:username", SearchByUsername);
-UserRouter.get("/:email", SearchByEmail);
-UserRouter.get("/:phone", SearchByPhone);
-UserRouter.get("/:id", SearchById);
+UserRouter.get("/username/:username",SearchByUsername);
+UserRouter.get("/email/:email",SearchByEmail);
+UserRouter.get("/phone/:phone",SearchByPhone);
+UserRouter.get("/:id",SearchById);
 UserRouter.put("/:id", Updateuser);
-UserRouter.delete("/:email", deleteUserbyEmail);
+UserRouter.delete("/email/:email", deleteUserbyEmail);
 UserRouter.delete("/:id", deleteUser);
 UserRouter.get("/", getAllUser);
