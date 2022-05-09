@@ -1,4 +1,4 @@
-import { deleteRoom, editRoom } from "../utils/utils.js";
+import { addRoom, deleteRoom, editRoom } from "./main.js";
 window._room = { deleteRoom, editRoom };
 import { ROOM_URL } from "../settings/settings.js";
 
@@ -94,10 +94,7 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: function () {
-              // show modal
-              $("#addModal").modal("show");
-            },
+            action: addRoom
           },
         ],
       });

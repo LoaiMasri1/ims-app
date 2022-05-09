@@ -1,73 +1,148 @@
-import { ROOM_URL, DELAY } from "../settings/settings.js";
-let token = localStorage.getItem("token");
+import {
+  DELAY,
+  ROOM_URL,
+  primaryColor,
+  dangerColor,
+} from "../settings/settings.js";
 
+const token = localStorage.getItem("token");
+console.log(token);
 
-$("#add-form").submit(function (e) {
-  e.preventDefault();
-  const form = $(this),
-    data = {
-      type: form.find("#type").val(),
-      userId: form.find("#user").val(),
-      departmentId: form.find("#department").val(),
-    };
-
-  $.ajax({
-    url: ROOM_URL,
-    method: "POST",
-    data: data,
-    success: function (data) {
-      $("#add-form")[0].reset();
-      $("#add-success").append(`<div class="alert alert-success" role="alert">
-                            <strong>Success!</strong> ${data.message}</div>`);
-
-      setTimeout(function () {
-        $("#success").empty();
-        $("#addModal").modal("hide");
-        location.reload();
-      }, DELAY);
+function getRoom(id) {
+  return $.ajax({
+    url: `${ROOM_URL}/${id}`,
+    method: "GET",
+    dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("authorization", "Bearer " + token);
     },
-    error: function (data) {
-      $("#add-errors").append(`<div class="alert alert-danger" role="alert">
-                            <strong>Error!</strong> ${data.responseJSON.message}</div>`);
-
-      setTimeout(function () {
-        $("#add-errors").empty();
-      }, DELAY);
-      console.error(data.responseJSON);
+    success: function (data) {
+      const { room } = data;
+      return room;
     },
   });
-});
+}
 
-$("#edit-form").submit(function (e) {
-  e.preventDefault();
-  const form = $(this),
-    data = {
-      type: form.find("#type").val(),
-      userId: form.find("#user").val(),
-      departmentId: form.find("#department").val(),
-    };
-  $.ajax({
-    url: `${ROOM_URL}/${form.find("#id").val()}`,
-    method: "PUT",
-    data: data,
-    success: function (data) {
-      $("#edit-form")[0].reset();
-      $("#edit-success").append(`<div class="alert alert-success" role="alert">
-                            <strong>Success!</strong> ${data.message}</div>`);
+export function deleteRoom(id) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: primaryColor,
+    cancelButtonColor: dangerColor,
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `${ROOM_URL}/${id}`,
+        method: "DELETE",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("authorization", "Bearer " + token);
+        },
+        success: function (data) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          setTimeout(() => {
+            location.reload();
+          }, DELAY - 1500);
+        },
+        error: function (data) {
+          Swal.fire("Error!", data.responseJSON.message, "error");
+          console.error(data.responseJSON.message);
+        },
+      });
+    }
+  });
+}
 
-      setTimeout(function () {
-        $("#edit-success").empty();
-        $("#editModal").modal("hide");
-        location.reload();
-      }, DELAY);
-    },
-    error: function (data) {
-      $("#edit-errors").append(`<div class="alert alert-danger" role="alert">
-                            <strong>Error!</strong> ${data.responseJSON.message}</div>`);
-      console.error(data.responseJSON.message);
-      setTimeout(function () {
-        $("#edit-errors").empty();
-      }, DELAY);
+export async function editRoom(id) {
+  const { room } = await getRoom(id),
+    { type, user, department } = room;
+
+  const { value: data } = await Swal.fire({
+    title: "Edit Room",
+    html: `<input id="Type" class="swal2-input"  value=${type}>
+           <input id="User" class="swal2-input" value=${user}>
+           <input id="Department" class="swal2-input" value=${department}>`,
+           
+    icon: "info",
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    confirmButtonText: "Add",
+    confirmButtonColor: primaryColor,
+    cancelButtonColor: dangerColor,
+    preConfirm: () => {
+      return {
+        type: $("#Type").val(),
+        userId: $("#User").val(),
+        departmentId: $("#Department").val(),
+      };
     },
   });
-});
+
+  if (data) {
+    $.ajax({
+      url: `${ROOM_URL}/${id}`,
+      method: "PUT",
+      data: data,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("authorization", "Bearer " + token);
+      },
+      success: function (data) {
+        Swal.fire("Edited!", "Your Database Edited Successfully.", "success");
+        setTimeout(() => {
+          location.reload();
+        }, DELAY - 1500);
+      },
+      error: function (err) {
+        Swal.fire("Error!", err.responseJSON.message, "error");
+        console.error(err.responseJSON.message);
+      },
+    });
+  }
+}
+
+export async function addRoom() {
+  const { value: data } = await Swal.fire({
+    title: "Add Room",
+    html: `<input id="Type" class="swal2-input" placeholder="Enter Type">
+                  <input id="User" class="swal2-input" placeholder="Enter User id">
+                  <input id="Department" class="swal2-input" placeholder="Enter Department id">`,
+    icon: "info",
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    confirmButtonText: "Add",
+    confirmButtonColor: primaryColor,
+  
+    cancelButtonColor: dangerColor,
+    preConfirm: () => {
+      return {
+        type: $("#Type").val(),
+        userId: $("#User").val(),
+        departmentId: $("#Department").val(),
+      };
+    },
+  });
+
+  if (data) {
+    $.ajax({
+      url: ROOM_URL,
+      method: "POST",
+      data: data,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("authorization", "Bearer " + token);
+      },
+      success: function (data) {
+        Swal.fire("Success", "Room Added Successfully", "success");
+        setTimeout(() => {
+          location.reload();
+        }, DELAY - 1500);
+      },
+      error: function (err) {
+        Swal.fire("Error", err.responseJSON.message, "error");
+      },
+    });
+  }
+}
