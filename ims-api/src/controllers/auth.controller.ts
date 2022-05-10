@@ -4,6 +4,7 @@ import { sendConfirmationEmail, objToString } from "../utility/user.utils";
 import * as jwt from "jsonwebtoken";
 import { UserStatus } from "../enums/user.enum";
 import { validate } from "class-validator";
+import { lowerCase } from "lower-case";
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -66,8 +67,8 @@ export const register = async (req: Request, res: Response) => {
   }
   try {
     const newUser = new User();
-    newUser.username = username;
-    newUser.email = email;
+    newUser.username = lowerCase(username);
+    newUser.email = lowerCase(email);
     newUser.password = password;
     newUser.phone = phone;
 
