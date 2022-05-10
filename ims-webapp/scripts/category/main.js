@@ -1,73 +1,141 @@
-import {CATEGORY_URL, DELAY } from "../settings/settings.js";
+import {
+  CATEGORY_URL,
+  DELAY,
+  primaryColor,
+  dangerColor,
+} from "../settings/settings.js";
 
+const token = localStorage.getItem("token");
 
+function getCategory(id) {
+  return $.ajax({
+    url: `${CATEGORY_URL}/${id}`,
+    method: "GET",
+    dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("authorization", "Bearer " + token);
+    },
+    success: function (data) {
+      const { category } = data;
+      return category;
+    },
+  });
+}
 
+export function deleteCategory(id) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: primaryColor,
+    cancelButtonColor: dangerColor,
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `${CATEGORY_URL}/${id}`,
+        method: "DELETE",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("authorization", "Bearer " + token);
+        },
+        success: function (data) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          setTimeout(() => {
+            location.reload();
+          }, DELAY - 1500);
+        },
+        error: function (data) {
+          Swal.fire("Error!", data.responseJSON.message, "error");
+          console.error(data.responseJSON.message);
+        },
+      });
+    }
+  });
+}
 
+export async function editCategory(id) {
+  const { category } = await getCategory(id),
+    { subClassification, mainClassification } = category;
 
-$("#add-form").submit(function (e) {
-  e.preventDefault();
-  const form = $(this),
-    data = {
-        mainClassification: form.find("#mainClassification").val(),
-        subClassification:form.find("#subClassification").val(),
-    };
+  const { value: data } = await Swal.fire({
+    title: "Edit Category",
+    html: `<input type="text" id="MainClassification" class="swal2-input"  value=${mainClassification}>
+           <input type="text" id="SubClassification" class="swal2-input" value=${subClassification}>`,
+    icon: "info",
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    confirmButtonText: "Add",
+    confirmButtonColor: primaryColor,
+    cancelButtonColor: dangerColor,
+    preConfirm: () => {
+      return {
+        mainClassification: $("#MainClassification").val(),
+        subClassification: $("#SubClassification").val(),
+      };
+    },
+  });
+
+  if (data) {
+    $.ajax({
+      url: `${CATEGORY_URL}/${id}`,
+      method: "PUT",
+      data: data,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("authorization", "Bearer " + token);
+      },
+      success: function (data) {
+        Swal.fire("Edited!", "Your Database Edited Successfully.", "success");
+        setTimeout(() => {
+          location.reload();
+        }, DELAY - 1500);
+      },
+      error: function (err) {
+        Swal.fire("Error!", err.responseJSON.message, "error");
+        console.error(err.responseJSON.message);
+      },
+    });
+  }
+}
+
+export async function addCategory() {
+  const { value: data } = await Swal.fire({
+    title: "Add Category",
+    html: `<input type="text" id="MainClassification" class="swal2-input w-75"  placeholder="Enter the Main Classification">
+           <input type="text" id="SubClassification" class="swal2-input w-75" placeholder="Enter the Sub Classification">`,
+    icon: "info",
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    confirmButtonText: "Add",
+    confirmButtonColor: primaryColor,
+    cancelButtonColor: dangerColor,
+    preConfirm: () => {
+      return {
+        mainClassification: $("#MainClassification").val(),
+        subClassification: $("#SubClassification").val(),
+      };
+    },
+  });
+
+  if (!data) return;
 
   $.ajax({
     url: CATEGORY_URL,
     method: "POST",
     data: data,
-    success: function (data) {
-      $("#add-form")[0].reset();
-      $("#add-success").append(`<div class="alert alert-success" role="alert">
-                            <strong>Success!</strong> ${data.message}</div>`);
-
-      setTimeout(function () {
-        $("#success").empty();
-        $("#addModal").modal("hide");
-        location.reload();
-      }, DELAY);
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("authorization", "Bearer " + token);
     },
-    error: function (data) {
-      $("#add-errors").append(`<div class="alert alert-danger" role="alert">
-                            <strong>Error!</strong> ${data.responseJSON.message}</div>`);
-
-      setTimeout(function () {
-        $("#add-errors").empty();
-      }, DELAY);
-      console.error(data.responseJSON.message);
+    success: function (data) {
+      Swal.fire("Success", "Category Added Successfully", "success");
+      setTimeout(() => {
+        location.reload();
+      }, DELAY - 1500);
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
     },
   });
-});
-
-$("#edit-form").submit(function (e) {
-  e.preventDefault();
-  const form = $(this),
-    data = {
-        mainClassification: form.find("#mainClassification").val(),
-        subClassification:form.find("#subClassification").val(),
-    };
-  $.ajax({
-    url: `${CATEGORY_URL}/${form.find("#id").val()}`,
-    method: "PUT",
-    data: data,
-    success: function (data) {
-      $("#edit-form")[0].reset();
-      $("#edit-success").append(`<div class="alert alert-success" role="alert">
-                            <strong>Success!</strong> ${data.message}</div>`);
-
-      setTimeout(function () {
-        $("#edit-success").empty();
-        $("#editModal").modal("hide");
-        location.reload();
-      }, DELAY);
-    },
-    error: function (data) {
-      $("#edit-errors").append(`<div class="alert alert-danger" role="alert">
-                           <strong>Error!</strong> ${data.responseJSON.message}</div>`);
-      console.error(data.responseJSON.message);
-      setTimeout(function () {
-        $("#edit-errors").empty();
-      }, DELAY);
-    },
-  });
-});
+}

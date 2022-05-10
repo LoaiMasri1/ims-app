@@ -1,4 +1,4 @@
-import { deleteUser, editUser } from "../utils/utils.js";
+import { deleteUser, editUser, addUser } from "./main.js";
 window._user = { deleteUser, editUser };
 import { USER_URL } from "../settings/settings.js";
 
@@ -10,7 +10,6 @@ $(document).ready(function () {
     success: function (data) {
       const title = "User",
         { user } = data;
-      console.log(user);
       let html = `
                     <thead>
                         <tr class="text-center">
@@ -101,10 +100,7 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: function () {
-              // show modal
-              $("#addModal").modal("show");
-            },
+            action: addUser,
           },
         ],
       });
