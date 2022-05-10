@@ -6,7 +6,6 @@ import {
 } from "../settings/settings.js";
 
 const token = localStorage.getItem("token");
-console.log(token);
 
 function getDepartment(id) {
   return $.ajax({
@@ -61,8 +60,8 @@ export async function editDepartment(id) {
 
   const { value: data } = await Swal.fire({
     title: "Edit Department",
-    html: `<input id="Name" class="swal2-input"  value=${name}>
-           <input id="Floor" class="swal2-input" value=${floorNumber}>`,
+    html: `<input type="text" id="Name" class="swal2-input"  value=${name}>
+           <input type="number" id="Floor" class="swal2-input" value=${floorNumber}>`,
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,
@@ -103,8 +102,8 @@ export async function editDepartment(id) {
 export async function addDepartment() {
   const { value: data } = await Swal.fire({
     title: "Add Department",
-    html: `<input id="Name" class="swal2-input" placeholder="Enter Name">
-                  <input id="Floor" class="swal2-input" placeholder="Enter Floor Number">`,
+    html: `<input type="text"  id="Name" class="swal2-input" placeholder="Enter Name">
+           <input type="number" id="Floor" class="swal2-input" placeholder="Enter Floor Number">`,
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,

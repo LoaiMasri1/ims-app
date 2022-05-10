@@ -8,7 +8,7 @@ export const REGISTER_URL = AUTH_URL + "register";
 export const USER_URL = BASE_URL + "user";
 export const ITEM_URL = BASE_URL + "item";
 export const CATEGORY_URL = BASE_URL + "category";
-
+export const EMPTY_MESSAGE = "999";
 export const DELAY = 3000;
 export const primaryColor = "#007bff";
 export const dangerColor = "#dc3545";

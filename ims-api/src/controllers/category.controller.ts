@@ -120,11 +120,11 @@ export const updateCategory = async (req: Request, res: Response) => {
 };
 export const searchById = async (req: Request, res: Response) => {
   const { id } = req.params as any;
-  const category = await Category.find({
+  const category = await Category.findOne({
     where: { id },
     loadRelationIds: true,
   });
-  if (!category.length) {
+  if (!category) {
     return res.status(400).json({
       message: `category with id ${id} not found`,
     });

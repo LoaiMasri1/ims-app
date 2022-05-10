@@ -3,16 +3,12 @@ import {
   ROOM_URL,
   primaryColor,
   dangerColor,
+  EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import {
-  getUsers,
-  getDepartments,
-} from "../utils/utils.js";
+import { getUsers, getDepartments } from "../utils/utils.js";
 const token = localStorage.getItem("token");
 console.log(token);
-
-const EMPTY_MESSAGE = "999";
 
 function getRoom(id) {
   return $.ajax({
@@ -68,7 +64,7 @@ export async function editRoom(id) {
   const { value: data } = await Swal.fire({
     title: "Edit Room",
     html: `
-    <input id="Type" class="swal2-input w-75" value=${type} placeholder="Enter Type">
+    <input type="text" id="Type" class="swal2-input w-75" value=${type} placeholder="Enter Type">
     <select id="User" class="swal2-input w-75">
       <option value=${EMPTY_MESSAGE}>Select User</option>
     </select>
@@ -144,7 +140,7 @@ export async function addRoom() {
   const { value: data } = await Swal.fire({
     title: "Add Room",
     html: `
-    <input id="Type" class="swal2-input w-75" placeholder="Enter Type">
+    <input type="text" id="Type" class="swal2-input w-75" placeholder="Enter Type">
             <select id="User" class="swal2-input w-75">
               <option selected value=${EMPTY_MESSAGE}>Select User</option>
             </select>
