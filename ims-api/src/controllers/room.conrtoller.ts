@@ -2,6 +2,8 @@ import { Room } from "../entities/room.entity";
 import { User } from "./../entities/user.entity";
 import { Department } from "../entities/department.entity";
 import { Request, Response } from "express";
+import { validate } from "class-validator";
+import { objToString } from "../utility/user.utils";
 
 export const createRoom = async (req: Request, res: Response) => {
     const {type,departmentId,userId} = req.body;
@@ -22,10 +24,19 @@ export const createRoom = async (req: Request, res: Response) => {
       room.type=type;
       room.department=department;
       room.user=user;
-      await room.save();
-        res.status(201).json({
-          message: "Room create successfully",
-        });
+      validate(room).then(async (errors) => {
+        if (errors.length > 0) {
+          const { constraints } = errors[0];
+          res.status(422).json({
+            message: objToString(constraints),
+          });
+        } else {
+          await room.save();
+          res.status(201).json({
+            message: "Room created successfully",
+          });
+        }
+      });
       } catch (error:any) {
         res.status(500).json({
           message: "Room already exists or failed to create room",

@@ -1,4 +1,4 @@
-import { DEPARTMENT_URL, ITEM_URL, USER_URL } from "../settings/settings.js";
+import { DEPARTMENT_URL, USER_URL, CATEGORY_URL } from "../settings/settings.js";
 
 const token = localStorage.getItem("token");
 
