@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,9 +14,11 @@ export class Category extends BaseEntity {
   id: number;
 
   @Column()
+  @IsNotEmpty()
   mainClassification: string;
 
   @Column()
+  @IsNotEmpty()
   subClassification: string;
 
   @OneToMany(() => Item, (item) => item.category)

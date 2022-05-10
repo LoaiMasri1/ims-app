@@ -1,5 +1,7 @@
 import { Department } from "../entities/department.entity";
 import { Request, Response } from "express";
+import { validate } from "class-validator";
+import { objToString } from "../utility/user.utils";
 
 export const createDepartment = async (req: Request, res: Response) => {
   const { name, floor } = req.body;
@@ -13,9 +15,18 @@ export const createDepartment = async (req: Request, res: Response) => {
     const department = new Department();
     department.name = name;
     department.floorNumber = floor;
-    department.save();
-    res.status(201).json({
-      message: "Department created successfully",
+    validate(department).then(async (errors) => {
+      if (errors.length > 0) {
+        const { constraints } = errors[0];
+        res.status(422).json({
+          message: objToString(constraints),
+        });
+      } else {
+        await department.save();
+        res.status(201).json({
+          message: "Department created successfully",
+        });
+      }
     });
   } catch (error) {
     res.status(500).json({

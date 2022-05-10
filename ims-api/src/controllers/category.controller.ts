@@ -1,5 +1,7 @@
 import { Category } from "./../entities/category.entity";
 import { Request, Response } from "express";
+import { validate } from "class-validator";
+import { objToString } from "../utility/user.utils";
 
 export const createCategory = async (req: Request, res: Response) => {
   const { mainClassification, subClassification } = req.body;
@@ -15,9 +17,18 @@ export const createCategory = async (req: Request, res: Response) => {
     const category = new Category();
     category.mainClassification = mainClassification;
     category.subClassification = subClassification;
-    await category.save();
-    res.status(201).json({
-      message: "category created successfully",
+    validate(category).then(async (errors) => {
+      if (errors.length > 0) {
+        const { constraints } = errors[0];
+        res.status(422).json({
+          message: objToString(constraints),
+        });
+      } else {
+        await category.save();
+        res.status(201).json({
+          message: "category created successfully",
+        });
+      }
     });
   } catch (error) {
     res.status(500).json({

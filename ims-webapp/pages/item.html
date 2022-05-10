@@ -103,51 +103,14 @@
     </div>
     <!-- ============ -->
 
-    <!-- edit modal -->
-    <div class="modal" id="editModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Item</h5>
-                    <button type="button" class="close btn" onclick="$('#editModal').modal('hide')">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit-form">
-
-                        <div class="form-outline mb-4 d-none">
-                            <label class="form-label" for="id">Id</label>
-                            <input type="text" id="id" class="form-control" name="id" />
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" class="form-control" name="name" required />
-                        </div>
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="categoryId">CategoryId</label>
-                            <input type="number" id="categoryId" class="form-control" name="categoryId" required />
-                        </div>
-                        <div class="form-outline mb-4 text-center">
-                            <button type="submit" class="btn btn-primary w-50">Add
-                                Item</button>
-                        </div>
-                        <div class="form-outline mb-4 text-center" id="edit-success"></div>
-                        <div class="form-outline mb-4 text-center" id="edit-errors"></div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- ================= -->
-
 
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/70efa33b16.js" crossorigin="anonymous"></script>
 
 
     <!-- Data table and Bootstrap -->
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>

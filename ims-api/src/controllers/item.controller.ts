@@ -1,6 +1,8 @@
 import { Item } from "./../entities/item.entity";
 import { Request, Response } from "express";
 import { Category } from "../entities/category.entity";
+import { validate } from "class-validator";
+import { objToString } from "../utility/user.utils";
 
 
 export const createItem = async (req: Request, res: Response) => {
@@ -16,9 +18,18 @@ export const createItem = async (req: Request, res: Response) => {
       const item =new Item();
       item.name=name;
       item.category =categoryId;
-      await item.save();
-      res.status(201).json({
-        message: "item created successfully",
+      validate(item).then(async (errors) => {
+        if (errors.length > 0) {
+          const { constraints } = errors[0];
+          res.status(422).json({
+            message: objToString(constraints),
+          });
+        } else {
+          await item.save();
+          res.status(201).json({
+            message: "Item created successfully",
+          });
+        }
       });
     } catch (error) {
       res.status(500).json({
