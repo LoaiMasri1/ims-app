@@ -5,8 +5,14 @@ import {
   dangerColor,
 } from "../settings/settings.js";
 
+import {
+  getUsers,
+  getDepartments,
+} from "../utils/utils.js";
 const token = localStorage.getItem("token");
 console.log(token);
+
+const EMPTY_MESSAGE = "999";
 
 function getRoom(id) {
   return $.ajax({
@@ -57,21 +63,45 @@ export function deleteRoom(id) {
 
 export async function editRoom(id) {
   const { room } = await getRoom(id),
-    { type, user, department } = room;
+    { type } = room;
 
   const { value: data } = await Swal.fire({
     title: "Edit Room",
-    html: `<input id="Type" class="swal2-input"  value=${type}>
-           <input id="User" class="swal2-input" value=${user}>
-           <input id="Department" class="swal2-input" value=${department}>`,
-           
+    html: `
+    <input id="Type" class="swal2-input w-75" value=${type} placeholder="Enter Type">
+    <select id="User" class="swal2-input w-75">
+      <option value=${EMPTY_MESSAGE}>Select User</option>
+    </select>
+    <select id="Department" class="swal2-input w-75">
+      <option  value=${EMPTY_MESSAGE}>Select Department</option>
+    </select>`,
+
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
-    confirmButtonText: "Add",
+    confirmButtonText: "Edit",
     confirmButtonColor: primaryColor,
     cancelButtonColor: dangerColor,
+    didOpen: async () => {
+      const { user } = await getUsers(),
+        { department } = await getDepartments();
+      user.forEach((user) => {
+        $("#User").append(
+          `<option value=${user.id} ${
+            user.id === room.user ? "selected" : ""
+          }>${user.username}</option>`
+        );
+      });
+
+      department.forEach((department) => {
+        $("#Department").append(
+          `<option value=${department.id} ${
+            department.id === room.department ? "selected" : ""
+          } >${department.name}</option>`
+        );
+      });
+    },
     preConfirm: () => {
       return {
         type: $("#Type").val(),
@@ -81,41 +111,52 @@ export async function editRoom(id) {
     },
   });
 
-  if (data) {
-    $.ajax({
-      url: `${ROOM_URL}/${id}`,
-      method: "PUT",
-      data: data,
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("authorization", "Bearer " + token);
-      },
-      success: function (data) {
-        Swal.fire("Edited!", "Your Database Edited Successfully.", "success");
-        setTimeout(() => {
-          location.reload();
-        }, DELAY - 1500);
-      },
-      error: function (err) {
-        Swal.fire("Error!", err.responseJSON.message, "error");
-        console.error(err.responseJSON.message);
-      },
-    });
+  if (!data) return;
+
+  if (data.userId === EMPTY_MESSAGE) {
+    return Swal.fire("Error!", "Please select a user", "error");
   }
+  if (data.departmentId === EMPTY_MESSAGE) {
+    return Swal.fire("Error!", "Please select a department", "error");
+  }
+
+  $.ajax({
+    url: `${ROOM_URL}/${id}`,
+    method: "PUT",
+    data: data,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("authorization", "Bearer " + token);
+    },
+    success: function (data) {
+      Swal.fire("Edited!", "Your Database Edited Successfully.", "success");
+      setTimeout(() => {
+        location.reload();
+      }, DELAY - 1500);
+    },
+    error: function (err) {
+      Swal.fire("Error!", err.responseJSON.message, "error");
+      console.error(err.responseJSON.message);
+    },
+  });
 }
 
 export async function addRoom() {
   const { value: data } = await Swal.fire({
     title: "Add Room",
-    html: `<input id="Type" class="swal2-input" placeholder="Enter Type">
-                  <input id="User" class="swal2-input" placeholder="Enter User id">
-                  <input id="Department" class="swal2-input" placeholder="Enter Department id">`,
+    html: `
+    <input id="Type" class="swal2-input w-75" placeholder="Enter Type">
+            <select id="User" class="swal2-input w-75">
+              <option selected value=${EMPTY_MESSAGE}>Select User</option>
+            </select>
+            <select id="Department" class="swal2-input w-75">
+              <option selected value=${EMPTY_MESSAGE}>Select Department</option>
+            </select>`,
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
     confirmButtonText: "Add",
     confirmButtonColor: primaryColor,
-  
     cancelButtonColor: dangerColor,
     preConfirm: () => {
       return {
@@ -124,25 +165,46 @@ export async function addRoom() {
         departmentId: $("#Department").val(),
       };
     },
+    didOpen: async () => {
+      const { user } = await getUsers(),
+        { department } = await getDepartments();
+
+      console.log(user);
+
+      user.forEach((user) => {
+        $("#User").append(`<option value=${user.id}>${user.username}</option>`);
+      });
+
+      department.forEach((department) => {
+        $("#Department").append(
+          `<option value=${department.id}>${department.name}</option>`
+        );
+      });
+    },
   });
 
-  if (data) {
-    $.ajax({
-      url: ROOM_URL,
-      method: "POST",
-      data: data,
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("authorization", "Bearer " + token);
-      },
-      success: function (data) {
-        Swal.fire("Success", "Room Added Successfully", "success");
-        setTimeout(() => {
-          location.reload();
-        }, DELAY - 1500);
-      },
-      error: function (err) {
-        Swal.fire("Error", err.responseJSON.message, "error");
-      },
-    });
-  }
+  if (!data) return;
+  if (data.departmentId === EMPTY_MESSAGE)
+    return await Swal.fire("Error!", "Please Select Department", "error");
+
+  if (data.userId === EMPTY_MESSAGE)
+    return await Swal.fire("Error!", "Please Select User", "error");
+
+  await $.ajax({
+    url: ROOM_URL,
+    method: "POST",
+    data: data,
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("authorization", "Bearer " + token);
+    },
+    success: function (data) {
+      Swal.fire("Success", "Room Added Successfully", "success");
+      setTimeout(() => {
+        location.reload();
+      }, DELAY - 1500);
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
+    },
+  });
 }
