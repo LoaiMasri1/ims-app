@@ -1,4 +1,4 @@
-import { deleteItem,editItem } from "../utils/utils.js";
+import { addItem,deleteItem,editItem } from "./main.js";
 window._item = { deleteItem, editItem };
 import { ITEM_URL } from "../settings/settings.js";
 
@@ -93,10 +93,7 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: function () {
-              // show modal
-              $("#addModal").modal("show");
-            },
+            action: addItem
           },
         ],
       });

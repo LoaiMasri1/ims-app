@@ -11,15 +11,10 @@ import {
   OneToOne,
   BeforeInsert,
 } from "typeorm";
-import UserStatus from "../enums/user.enum";
+import { UserStatus, UserRole } from "../enums/user.enum";
 import * as bcrypt from "bcrypt";
 
-import{
-  IsNotEmpty,
-  IsEmail,
-  Matches,
-  IsPhoneNumber,
-} from "class-validator";
+import { IsNotEmpty, IsEmail, Matches, IsPhoneNumber } from "class-validator";
 
 @Entity()
 export class User extends BaseEntity {
@@ -32,33 +27,33 @@ export class User extends BaseEntity {
 
   @Column()
   @IsNotEmpty({
-    message: 'please enter username',
+    message: "please enter username",
   })
   username: string;
 
   @Column({ unique: true })
   @IsNotEmpty({
-    message: 'please enter email',
+    message: "please enter email",
   })
   @IsEmail()
   email: string;
 
   @Column()
   @IsNotEmpty({
-    message: 'please enter password',
+    message: "please enter password",
   })
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/, {
     message:
-      'Password must contain uppercase and lowercase characters, minimum character length 8, maximum 20',
+      "Password must contain uppercase and lowercase characters, minimum character length 8, maximum 20",
   })
   password: string;
 
   @Column({ unique: true })
   @IsPhoneNumber()
   @IsNotEmpty({
-    message: 'please enter phone number',
+    message: "please enter phone number",
   })
-  phone:string;
+  phone: string;
 
   @Column()
   @Generated("uuid")
@@ -66,6 +61,9 @@ export class User extends BaseEntity {
 
   @Column({ default: UserStatus.PENDING })
   confirmed: number;
+
+  @Column({ default: UserRole.USER })
+  role: number;
 
   @UpdateDateColumn()
   createAt: Date;
@@ -87,8 +85,4 @@ export class User extends BaseEntity {
   async comparePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password);
   }
-
 }
-
-
-

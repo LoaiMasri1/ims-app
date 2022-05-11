@@ -8,6 +8,7 @@ import {
   BaseEntity,
 } from "typeorm";
 import { Category } from "./category.entity";
+import { IsNotEmpty } from "class-validator";
 
 @Entity()
 export class Item extends BaseEntity {
@@ -15,6 +16,7 @@ export class Item extends BaseEntity {
   id: number;
 
   @Column()
+  @IsNotEmpty()
   name: string;
 
   @ManyToOne(() => Category, (Category) => Category.item)

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User</title>
+    <title>Room</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css"
@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.css" />
 
+    <link rel="stylesheet" href="../css/department.css">
 </head>
 
 <body>
@@ -38,12 +39,12 @@
                         <a class="nav-link" aria-current="page" href="department.html">Department</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="user.html">User</a>
+                        <a class="nav-link" href="user.html">User</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="category.html">Category</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link" href="room.html">Room</a>
                     </li>
 
@@ -64,18 +65,17 @@
     </nav>
 
 
-    <div class="container mt-3">
+    <div class="container mt-5">
         <table id="myTable" class="table table-responsive"></table>
     </div>
-
 
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/70efa33b16.js" crossorigin="anonymous"></script>
 
-    <!-- Sweet Alert -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Data table and Bootstrap -->
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
@@ -88,8 +88,8 @@
         src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/datatables.min.js"></script>
 
     <!--==========================-->
-    <script type="module" src="../scripts/user/initTable.js"></script>
-    <script type="module" src="../scripts/user/main.js"></script>
+    <script type="module" src="../scripts/room/initTable.js"></script>
+    <script type="module" src="../scripts/room/main.js"></script>
 </body>
 
 </html>

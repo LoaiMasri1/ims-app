@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsNumber } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity } from "typeorm";
 import { Room } from "./room.entity";
 import { User } from "./user.entity";
@@ -8,9 +9,11 @@ export class Department extends BaseEntity {
   id: number;
 
   @Column()
+  @IsNotEmpty()
   name: string;
 
   @Column()
+  @IsNotEmpty()
   floorNumber: number;
 
   @OneToMany(() => User, user => user.department )

@@ -1,8 +1,8 @@
+import { isLoggedIn } from './../middlewares/user.middleware';
 import {
   login,
   register,
   confirmUser,
-  logout,
 } from "./../controllers/auth.controller";
 import { Router } from "express";
 export const AuthRouter: Router = Router({
@@ -12,4 +12,4 @@ export const AuthRouter: Router = Router({
 AuthRouter.post("/login", login);
 AuthRouter.post("/register", register);
 AuthRouter.get("/confirm/:confirmationCode", confirmUser);
-AuthRouter.get("/logout", logout);
+//AuthRouter.get("/logout",isLoggedIn, logout);

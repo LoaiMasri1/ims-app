@@ -2,6 +2,8 @@ import { Room } from "../entities/room.entity";
 import { User } from "./../entities/user.entity";
 import { Department } from "../entities/department.entity";
 import { Request, Response } from "express";
+import { validate } from "class-validator";
+import { objToString } from "../utility/user.utils";
 
 export const createRoom = async (req: Request, res: Response) => {
     const {type,departmentId,userId} = req.body;
@@ -22,14 +24,23 @@ export const createRoom = async (req: Request, res: Response) => {
       room.type=type;
       room.department=department;
       room.user=user;
-      room.save();
-        res.status(201).json({
-          message: "Room create successfully",
-        });
-      } catch (error) {
+      validate(room).then(async (errors) => {
+        if (errors.length > 0) {
+          const { constraints } = errors[0];
+          res.status(422).json({
+            message: objToString(constraints),
+          });
+        } else {
+          await room.save();
+          res.status(201).json({
+            message: "Room created successfully",
+          });
+        }
+      });
+      } catch (error:any) {
         res.status(500).json({
-            message: "Room creation failed",
-            err: error,
+          message: "Room already exists or failed to create room",
+          err: error.driverError.code,
           });
       }
 }
@@ -90,14 +101,14 @@ export const searchbyType = async (req: Request, res: Response) => {
   }
   export const searchbyId = async (req: Request, res: Response) => {
     const {id} = req.params as any;
-    const room = await Room.findOne({ where: { id } });
-    if (!room) {
+    try {
+      const room = await Room.findOne({ where: { id }, relations:{user:true , department:true},loadRelationIds:true});
+      if (!room) {
       return res.status(400).json({
         message: `Room with id ${id} not found`,
       });
     }
-    try {
-        res.status(201).json({
+        res.status(201).json({ 
           room
         });
       } catch (error) {
@@ -109,7 +120,7 @@ export const searchbyType = async (req: Request, res: Response) => {
   }
 
   export const getAllRoom = async (req: Request, res: Response) => {
-    const room = await Room.find();
+    const room = await Room.find({relations:{user:true , department:true},loadRelationIds:true});
     if (!room) {
       return res.status(400).json({
         message: `Room not found`,

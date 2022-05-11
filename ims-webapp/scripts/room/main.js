@@ -1,31 +1,31 @@
 import {
-  USER_URL,
   DELAY,
+  ROOM_URL,
   primaryColor,
   dangerColor,
   EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import { getDepartments } from "../utils/utils.js";
-
+import { getUsers, getDepartments } from "../utils/utils.js";
 const token = localStorage.getItem("token");
+console.log(token);
 
-function getUser(id) {
+function getRoom(id) {
   return $.ajax({
-    url: `${USER_URL}/${id}`,
+    url: `${ROOM_URL}/${id}`,
     method: "GET",
     dataType: "json",
     beforeSend: function (xhr) {
       xhr.setRequestHeader("authorization", "Bearer " + token);
     },
     success: function (data) {
-      const { category } = data;
-      return category;
+      const { room } = data;
+      return room;
     },
   });
 }
 
-export function deleteUser(id) {
+export function deleteRoom(id) {
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -37,7 +37,7 @@ export function deleteUser(id) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: `${USER_URL}/${id}`,
+        url: `${ROOM_URL}/${id}`,
         method: "DELETE",
         beforeSend: function (xhr) {
           xhr.setRequestHeader("authorization", "Bearer " + token);
@@ -57,53 +57,67 @@ export function deleteUser(id) {
   });
 }
 
-export async function editUser(id) {
-  const { user } = await getUser(id),
-    { username, email, phone } = user;
+export async function editRoom(id) {
+  const { room } = await getRoom(id),
+    { type } = room;
+
   const { value: data } = await Swal.fire({
-    title: "Edit Category",
-    html: `<input type="text" id="username" class="swal2-input w-75"  value=${username}>
-           <input type="email" id="email" class="swal2-input w-75" value=${email}>
-           <input type="text" id="phone" class="swal2-input w-75" value=${phone}>
-           <select id="department" class="swal2-input w-75">
-           <option value=${EMPTY_MESSAGE}>Select Department</option>
-           </select>
-           `,
+    title: "Edit Room",
+    html: `
+    <input type="text" id="Type" class="swal2-input w-75" value=${type} placeholder="Enter Type">
+    <select id="User" class="swal2-input w-75">
+      <option value=${EMPTY_MESSAGE}>Select User</option>
+    </select>
+    <select id="Department" class="swal2-input w-75">
+      <option  value=${EMPTY_MESSAGE}>Select Department</option>
+    </select>`,
+
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
-    confirmButtonText: "Add",
+    confirmButtonText: "Edit",
     confirmButtonColor: primaryColor,
     cancelButtonColor: dangerColor,
     didOpen: async () => {
-      const { department } = await getDepartments();
+      const { user } = await getUsers(),
+        { department } = await getDepartments();
+      user.forEach((user) => {
+        $("#User").append(
+          `<option value=${user.id} ${
+            user.id === room.user ? "selected" : ""
+          }>${user.username}</option>`
+        );
+      });
+
       department.forEach((department) => {
-        $("#department").append(
+        $("#Department").append(
           `<option value=${department.id} ${
-            department.id === user.department.id ? "selected" : ""
+            department.id === room.department ? "selected" : ""
           } >${department.name}</option>`
         );
       });
     },
     preConfirm: () => {
       return {
-        username: $("#username").val(),
-        email: $("#email").val(),
-        phone: $("#phone").val(),
-        departmentId: $("#department").val(),
+        type: $("#Type").val(),
+        userId: $("#User").val(),
+        departmentId: $("#Department").val(),
       };
     },
   });
 
   if (!data) return;
 
-  if (data.departmentId === EMPTY_MESSAGE)
+  if (data.userId === EMPTY_MESSAGE) {
+    return Swal.fire("Error!", "Please select a user", "error");
+  }
+  if (data.departmentId === EMPTY_MESSAGE) {
     return Swal.fire("Error!", "Please select a department", "error");
+  }
 
-  console.log(data);
   $.ajax({
-    url: `${USER_URL}/${id}`,
+    url: `${ROOM_URL}/${id}`,
     method: "PUT",
     data: data,
     beforeSend: function (xhr) {
@@ -122,16 +136,17 @@ export async function editUser(id) {
   });
 }
 
-export async function addUser() {
+export async function addRoom() {
   const { value: data } = await Swal.fire({
-    title: "Add User",
-    html: `<input type="text" id="username" class="swal2-input w-75" placeholder="Enter Username">
-           <input type="email" id="email" class="swal2-input w-75" placeholder="Enter Email">
-           <input type="tel" id="phone" class="swal2-input w-75" placeholder="Enter Phone">
-           <select id="department" class="swal2-input w-75">
-           <option selected value="999">Select Department</option>
-           </select>
-           <p class="text-muted mt-3">The default password is <strong>Password123</strong><br>to change it contact the admin</p>`,
+    title: "Add Room",
+    html: `
+    <input type="text" id="Type" class="swal2-input w-75" placeholder="Enter Type">
+            <select id="User" class="swal2-input w-75">
+              <option selected value=${EMPTY_MESSAGE}>Select User</option>
+            </select>
+            <select id="Department" class="swal2-input w-75">
+              <option selected value=${EMPTY_MESSAGE}>Select Department</option>
+            </select>`,
     icon: "info",
     focusConfirm: false,
     showCancelButton: true,
@@ -139,38 +154,47 @@ export async function addUser() {
     confirmButtonText: "Add",
     confirmButtonColor: primaryColor,
     cancelButtonColor: dangerColor,
+    preConfirm: () => {
+      return {
+        type: $("#Type").val(),
+        userId: $("#User").val(),
+        departmentId: $("#Department").val(),
+      };
+    },
     didOpen: async () => {
-      const { department } = await getDepartments();
+      const { user } = await getUsers(),
+        { department } = await getDepartments();
+
+      console.log(user);
+
+      user.forEach((user) => {
+        $("#User").append(`<option value=${user.id}>${user.username}</option>`);
+      });
+
       department.forEach((department) => {
-        $("#department").append(
+        $("#Department").append(
           `<option value=${department.id}>${department.name}</option>`
         );
       });
     },
-    preConfirm: () => {
-      return {
-        username: $("#username").val(),
-        email: $("#email").val(),
-        phone: $("#phone").val(),
-        departmentId: $("#department").val(),
-      };
-    },
   });
 
   if (!data) return;
+  if (data.departmentId === EMPTY_MESSAGE)
+    return await Swal.fire("Error!", "Please Select Department", "error");
 
-  if (data.departmentId === "999")
-    return Swal.fire("Error!", "Please select a department", "error");
+  if (data.userId === EMPTY_MESSAGE)
+    return await Swal.fire("Error!", "Please Select User", "error");
 
-  $.ajax({
-    url: USER_URL,
+  await $.ajax({
+    url: ROOM_URL,
     method: "POST",
     data: data,
     beforeSend: function (xhr) {
       xhr.setRequestHeader("authorization", "Bearer " + token);
     },
     success: function (data) {
-      Swal.fire("Success", data.message, "success");
+      Swal.fire("Success", "Room Added Successfully", "success");
       setTimeout(() => {
         location.reload();
       }, DELAY - 1500);

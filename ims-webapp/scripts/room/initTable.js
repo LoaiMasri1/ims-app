@@ -1,38 +1,39 @@
-import { addCategory, deleteCategory, editCategory } from "./main.js";
-window._category = { deleteCategory, editCategory };
-import { CATEGORY_URL } from "../settings/settings.js";
+import { addRoom, deleteRoom, editRoom } from "./main.js";
+window._room = { deleteRoom, editRoom };
+import { ROOM_URL } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
-    url: CATEGORY_URL,
+    url: ROOM_URL,
     method: "GET",
     dataType: "json",
     success: function (data) {
-      const title = "Category",
-        { category } = data;
+      const title = "Room",
+        { room } = data;
       let html = `
                     <thead>
                         <tr class="text-center">
                             <th>ID</th>
-                            <th>mainClassification</th>
-                            <th>subClassification</th>
+                            <th>Type</th>
+                            <th>User</th>
+                            <th>Department</th>
                             <th>Action's</th>
-                    
                         </tr>
                     </thead>
                     <tbody>
-                        ${category
-                          .map((category) => {
+                        ${room
+                          .map((room) => {
                             return `
                                 <tr class="text-center">
-                                    <td>${category.id}</td>
-                                    <td>${category.mainClassification}</td>
-                                    <td>${category.subClassification}</td>
+                                    <td>${room.id}</td>
+                                    <td>${room.type}</td>
+                                    <td>${room.user}</td>
+                                    <td>${room.department}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="window._category.editCategory(${category.id})">
+                                        <button class="btn btn-primary btn-sm" onclick="window._room.editRoom(${room.id})">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="window._category.deleteCategory(${category.id})">
+                                        <button class="btn btn-danger btn-sm" onclick="window._room.deleteRoom(${room.id})">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -93,7 +94,7 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: addCategory,
+            action: addRoom
           },
         ],
       });

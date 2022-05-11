@@ -2,19 +2,14 @@ import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
 import { sendConfirmationEmail, objToString } from "../utility/user.utils";
 import * as jwt from "jsonwebtoken";
-import UserStatus from "../enums/user.enum";
+import { UserStatus } from "../enums/user.enum";
 import { validate } from "class-validator";
+import { lowerCase } from "lower-case";
 
 export const login = async (req: Request, res: Response) => {
-  if (req.cookies.token) {
-    return res.status(200).json({
-      message: "You are already logged in",
-    });
-  }
+  const { username, password } = req.body;
 
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { username } });
   if (!user) {
     return res.status(400).json({
       message: "Email or Password is incorrect",
@@ -30,29 +25,26 @@ export const login = async (req: Request, res: Response) => {
       message: "Please confirm your email",
     });
   }
+  const isMatch = await user.comparePassword(password);
 
-  if (!user.comparePassword(password)) {
+  if (!isMatch) {
     return res.status(400).json({
-      message: "Email or Password is incorrect",
+      message: "Username or Password is incorrect",
     });
   }
   const token = jwt.sign(
     {
-      id: user.id,
+      id: user.userId,
       username: user.username,
       email: user.email,
       phone: user.phone,
+      role: user.role,
     },
-    "secret",
+    process.env.JWT_SECRET as string,
     {
       expiresIn: "1h",
     }
   );
-
-  res.cookie("token", token, {
-    expires: new Date(Date.now() + 3600000),
-    httpOnly: true,
-  });
 
   res.status(200).json({
     token: token,
@@ -75,22 +67,19 @@ export const register = async (req: Request, res: Response) => {
   }
   try {
     const newUser = new User();
-    newUser.username = username;
-    newUser.email = email;
+    newUser.username = lowerCase(username);
+    newUser.email = lowerCase(email);
     newUser.password = password;
     newUser.phone = phone;
 
-    validate(newUser).then((errors) => {
-      // errors is an array of validation errors
-
+    validate(newUser).then(async (errors) => {
       if (errors.length > 0) {
         const { constraints } = errors[0];
         res.status(422).json({
           message: objToString(constraints),
         });
       } else {
-        console.log("validation succeed");
-        newUser.save();
+        await newUser.save();
         sendConfirmationEmail(
           newUser.username,
           newUser.email,
@@ -130,11 +119,4 @@ export const confirmUser = async (req: Request, res: Response) => {
       err: error,
     });
   }
-};
-
-export const logout = async (req: Request, res: Response) => {
-  res.clearCookie("token");
-  res.status(200).json({
-    message: "User logged out successfully",
-  });
 };

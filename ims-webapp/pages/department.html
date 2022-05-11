@@ -19,90 +19,59 @@
 </head>
 
 <body>
-    <div class="container mt-5">
+    <nav class="navbar navbar-expand-md navbar-light py-3 px-1">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fa fa-shopping-bag text-primary"></i>
+                <span class="text-uppercase text-primary m-2 fw-bold font-monospace" style="font-size: 24px;">IMS</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav container">
+                    <li class="nav-item">
+                        <a class="nav-link" href="item.html">Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="department.html">Department</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user.html">User</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="category.html">Category</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="room.html">Room</a>
+                    </li>
+
+                    <li class="nav-item dropdown ms-sm-0 ms-md-auto ">
+                        <a class="nav-link dropdown-toggle d-lg-flex align-items-lg-center text-primary" href="#"
+                            id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-gear text-primary fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><button class="dropdown-item"
+                                    onclick="localStorage.clear('token');window.location.href = 'login.html';">LogOut</button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container mt-3">
         <table id="myTable" class="table table-responsive"></table>
-    </div>
+    </section>
 
-    <!-- modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Department</h5>
-                    <button type="button" class="close btn" onclick="$('#addModal').modal('hide')">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add-form">
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" class="form-control" name="name" required />
-                        </div>
-    
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="floor">Floor Number</label>
-                            <input type="number" id="floor" class="form-control" name="floor" required />
-                        </div>
-    
-                        <div class="form-outline mb-4 text-center">
-                            <button type="submit" class="btn btn-primary w-50">Add
-                                Department</button>
-                        </div>
-                        <div class="form-outline mb-4 text-center" id="add-success"></div>
-                        <div class="form-outline mb-4 text-center" id="add-errors"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ============ -->
-
-    <!-- edit modal -->
-    <div class="modal" id="editModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Department</h5>
-                    <button type="button" class="close btn" onclick="$('#editModal').modal('hide')">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit-form">
-
-                        <div class="form-outline mb-4 d-none">
-                            <label class="form-label" for="id">Id</label>
-                            <input type="text" id="id" class="form-control" name="id" />
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" class="form-control" name="name" required />
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="floor">Floor Number</label>
-                            <input type="number" id="floor" class="form-control" name="floor" required />
-                        </div>
-
-                        <div class="form-outline mb-4 text-center">
-                            <button type="submit" class="btn btn-primary w-50">Add
-                                Department</button>
-                        </div>
-                        <div class="form-outline mb-4 text-center" id="edit-success"></div>
-                        <div class="form-outline mb-4 text-center" id="edit-errors"></div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- ================= -->
-
+    <!-- Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/70efa33b16.js" crossorigin="anonymous"></script>
-
 
     <!-- Data table and Bootstrap -->
 

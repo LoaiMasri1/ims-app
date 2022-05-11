@@ -9,6 +9,7 @@ import {
   OneToMany,
   BaseEntity,
 } from "typeorm";
+import { IsNotEmpty } from "class-validator";
 import { Department } from "./department.entity";
 import { User } from "./user.entity";
 
@@ -18,6 +19,7 @@ export class Room extends BaseEntity {
   id: number;
 
   @Column()
+  @IsNotEmpty()
   type: string;
 
   @OneToOne(() => User, (user) => user.room)
