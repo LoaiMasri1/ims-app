@@ -1,9 +1,9 @@
 import { Room } from "./room.entity";
 import { Item } from "./item.entity";
-import { Entity, Column, ManyToOne, PrimaryColumn } from "typeorm";
+import { Entity, Column, ManyToOne, PrimaryColumn, BaseEntity } from "typeorm";
 
 @Entity()
-export class ItemRoom {
+export class ItemRoom extends BaseEntity {
   @PrimaryColumn()
   itemId: number;
 

@@ -189,7 +189,7 @@ export const getAllUser = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { username, email, password, phone, departmentId } = req.body;
+  const { username, email, phone, departmentId } = req.body;
   const userEmail = await User.findOne({ where: { email } });
   const userPhone = await User.findOne({ where: { phone } });
   const department = await Department.findOne({ where: { id: departmentId } });
