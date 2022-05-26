@@ -9,6 +9,7 @@ import { AuthRouter } from "./routes/auth.routes";
 import { UserRouter } from "./routes/user.routes";
 import { ItemRouter } from "./routes/item.routes";
 import { CategoryRouter } from "./routes/category.routes";
+import { ItemRoomRouter } from "./routes/itemroom.routes";
 
 const app: Application = express();
 
@@ -26,5 +27,6 @@ app.use(`${BASE_URL}/department`, /*isLoggedIn, isAdmin,*/ DepartmentRouter);
 app.use(`${BASE_URL}/room`, /*isLoggedIn, isAdmin,*/ RoomRouter);
 app.use(`${BASE_URL}/category`, /*isLoggedIn,*/ CategoryRouter);
 app.use(`${BASE_URL}/item`, /*isLoggedIn,*/ ItemRouter);
+app.use(`${BASE_URL}/itemroom`, /*isLoggedIn,*/ ItemRoomRouter);
 
 export default app;
