@@ -55,10 +55,6 @@ export class User extends BaseEntity {
   })
   phone: string;
 
-  @Column()
-  @Generated("uuid")
-  confirmationCode: string;
-
   @Column({ default: UserStatus.PENDING })
   confirmed: number;
 

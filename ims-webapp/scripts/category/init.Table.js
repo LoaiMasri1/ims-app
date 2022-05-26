@@ -1,12 +1,18 @@
 import { addCategory, deleteCategory, editCategory } from "./main.js";
 window._category = { deleteCategory, editCategory };
-import { CATEGORY_URL } from "../settings/settings.js";
+import { CATEGORY_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
     url: CATEGORY_URL,
     method: "GET",
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(
+        "authorization",
+        "Bearer " + localStorage.getItem("token")
+      );
+    },
     success: function (data) {
       const title = "Category",
         { category } = data;
@@ -97,6 +103,12 @@ $(document).ready(function () {
           },
         ],
       });
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
+      setTimeout(() => {
+        window.location.href = "item.html";
+      }, DELAY - 1500);
     },
   });
 });

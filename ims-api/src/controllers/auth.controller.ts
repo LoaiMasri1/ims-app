@@ -1,7 +1,12 @@
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
-import { sendConfirmationEmail, objToString } from "../utility/user.utils";
-import * as jwt from "jsonwebtoken";
+import {
+  sendConfirmationEmail,
+  objToString,
+  verifyToken,
+  generateToken,
+} from "../utility/user.utils";
+
 import { UserStatus } from "../enums/user.enum";
 import { validate } from "class-validator";
 import { lowerCase } from "lower-case";
@@ -12,43 +17,36 @@ export const login = async (req: Request, res: Response) => {
   const user = await User.findOne({ where: { username } });
   if (!user) {
     return res.status(400).json({
-      message: "Email or Password is incorrect",
-    });
-  }
-  if (!user.confirmed) {
-    await sendConfirmationEmail(
-      user.username,
-      user.email,
-      user.confirmationCode
-    );
-    return res.status(400).json({
-      message: "Please confirm your email",
-    });
-  }
-  const isMatch = await user.comparePassword(password);
-
-  if (!isMatch) {
-    return res.status(400).json({
       message: "Username or Password is incorrect",
     });
-  }
-  const token = jwt.sign(
-    {
-      id: user.userId,
+  } else if (user.confirmed === UserStatus.PENDING) {
+    const token = await generateToken({
       username: user.username,
       email: user.email,
-      phone: user.phone,
-      role: user.role,
-    },
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: "1h",
+    });
+    await sendConfirmationEmail(user.username, user.email, token);
+    res.status(400).json({
+      message: "Please confirm your email , check your email",
+    });
+  } else {
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Username or Password is incorrect",
+      });
+    } else {
+      const token = await generateToken({
+        id: user.userId,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      });
+      return res.status(200).json({
+        message: "Login Successful",
+        token,
+      });
     }
-  );
-
-  res.status(200).json({
-    token: token,
-  });
+  }
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -79,12 +77,13 @@ export const register = async (req: Request, res: Response) => {
           message: objToString(constraints),
         });
       } else {
-        await newUser.save();
-        sendConfirmationEmail(
-          newUser.username,
-          newUser.email,
-          newUser.confirmationCode
-        );
+        const token = await generateToken({
+          username: newUser.username,
+          email: newUser.email,
+          password: newUser.password,
+          phone: newUser.phone,
+        });
+        sendConfirmationEmail(newUser.username, newUser.email, token);
         res.status(201).json({
           message: "User created successfully, please check your email",
         });
@@ -99,24 +98,47 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const confirmUser = async (req: Request, res: Response) => {
-  const { confirmationCode } = req.params;
-  const user = await User.findOne({ where: { confirmationCode } });
-  if (!user) {
+  const { token } = req.params;
+  const decoded = (await verifyToken(token)) as any;
+
+  if (!decoded) {
     return res.status(400).json({
-      message: "User not found",
+      message: "Invalid token",
     });
   }
-  try {
-    user.confirmed = UserStatus.VERIFIED;
-    user.confirmationCode = "";
-    user.save();
-    res.status(201).json({
-      message: "User confirmed successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "User confirmation failed",
-      err: error,
+  const { username, email } = decoded;
+  const user = await User.findOne({ where: { username, email } });
+  if (!user) {
+    try {
+      const { password, phone, department } = decoded;
+      const newUser = new User();
+      newUser.username = username;
+      newUser.email = email;
+      newUser.password = password;
+      newUser.phone = phone;
+      newUser.department = department || null;
+      newUser.confirmed = UserStatus.VERIFIED;
+
+      await newUser.save();
+      return res.status(200).json({
+        message: "User confirmed successfully",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "User confirmation failed",
+        err: error,
+      });
+    }
+  } else {
+    if (user.confirmed === UserStatus.PENDING) {
+      user.confirmed = UserStatus.VERIFIED;
+      await user.save();
+      return res.status(200).json({
+        message: "User confirmed successfully",
+      });
+    }
+    return res.status(200).json({
+      message: "User already confirmed",
     });
   }
 };

@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 const BASE_URL = "/api/v1";
 
 app.use("/auth/v1", AuthRouter);
-app.use(`${BASE_URL}/user`, /*isLoggedIn, isAdmin,*/ UserRouter);
-app.use(`${BASE_URL}/department`, /*isLoggedIn, isAdmin,*/ DepartmentRouter);
-app.use(`${BASE_URL}/room`, /*isLoggedIn, isAdmin,*/ RoomRouter);
-app.use(`${BASE_URL}/category`, /*isLoggedIn,*/ CategoryRouter);
-app.use(`${BASE_URL}/item`, /*isLoggedIn,*/ ItemRouter);
-app.use(`${BASE_URL}/itemroom`, /*isLoggedIn,*/ ItemRoomRouter);
+app.use(`${BASE_URL}/user`, isLoggedIn, isAdmin, UserRouter);
+app.use(`${BASE_URL}/department`, isLoggedIn, isAdmin, DepartmentRouter);
+app.use(`${BASE_URL}/room`, isLoggedIn, isAdmin, RoomRouter);
+app.use(`${BASE_URL}/category`, isLoggedIn, CategoryRouter);
+app.use(`${BASE_URL}/item`, isLoggedIn, ItemRouter);
+app.use(`${BASE_URL}/itemroom`, isLoggedIn, ItemRoomRouter);
 
 export default app;

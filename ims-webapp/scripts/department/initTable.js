@@ -1,6 +1,6 @@
 import { addDepartment, deleteDepartment, editDepartment } from "./main.js";
 window._department = { deleteDepartment, editDepartment };
-import { DEPARTMENT_URL } from "../settings/settings.js";
+import { DELAY, DEPARTMENT_URL } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
@@ -104,7 +104,10 @@ $(document).ready(function () {
       });
     },
     error: function (err) {
-      Swal.fire("Error", "Please Try To Login Again Later", "error");
+      Swal.fire("Error", err.responseJSON.message, "error");
+      setTimeout(() => {
+        window.location.href = "item.html";
+      }, DELAY - 1500);
     },
   });
 });

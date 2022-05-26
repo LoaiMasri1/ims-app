@@ -1,4 +1,8 @@
 import { DELAY, REGISTER_URL } from "../settings/settings.js";
+const token = localStorage.getItem("token");
+if (token) {
+  window.location.href = "item.html";
+}
 
 function registerUser(e) {
   e.preventDefault();

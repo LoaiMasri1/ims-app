@@ -6,10 +6,13 @@ import {
   EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import { getDepartments } from "../utils/utils.js";
+import { getDepartments, getUsername } from "../utils/utils.js";
 
 const token = localStorage.getItem("token");
-
+if (!token) {
+  window.location.href = "login.html";
+}
+getUsername(token);
 function getUser(id) {
   return $.ajax({
     url: `${USER_URL}/${id}`,
@@ -81,7 +84,7 @@ export async function editUser(id) {
       department.forEach((department) => {
         $("#department").append(
           `<option value=${department.id} ${
-            department.id === user.department.id ? "selected" : ""
+            department.id === user.department ? "selected" : ""
           } >${department.name}</option>`
         );
       });

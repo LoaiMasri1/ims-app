@@ -1,12 +1,18 @@
-import { addItem,deleteItem,editItem } from "./main.js";
+import { addItem, deleteItem, editItem } from "./main.js";
 window._item = { deleteItem, editItem };
-import { ITEM_URL } from "../settings/settings.js";
+import { DELAY, ITEM_URL } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
     url: ITEM_URL,
     method: "GET",
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(
+        "authorization",
+        "Bearer " + localStorage.getItem("token")
+      );
+    },
     success: function (data) {
       const title = "Item",
         { item } = data;
@@ -15,7 +21,7 @@ $(document).ready(function () {
                         <tr class="text-center">
                             <th>ID</th>
                             <th>Name</th>
-                            <th>categoryId</th>
+                            <th>Category</th>
                             <th>Action's</th>
                     
                         </tr>
@@ -27,7 +33,8 @@ $(document).ready(function () {
                                 <tr class="text-center">
                                     <td>${item.id}</td>
                                     <td>${item.name}</td>
-                                    <td>${item.category}</td>
+
+                                    <td>${item.category.mainClassification},${item.category.subClassification}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="window._item.editItem(${item.id})">
                                             <i class="fa fa-edit"></i>
@@ -93,10 +100,17 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: addItem
+            action: addItem,
           },
         ],
       });
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, DELAY - 1500);
     },
   });
 });

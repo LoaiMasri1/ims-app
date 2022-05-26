@@ -4,8 +4,13 @@ import {
   primaryColor,
   dangerColor,
 } from "../settings/settings.js";
+import { getUsername } from "../utils/utils.js";
 
 const token = localStorage.getItem("token");
+if (!token) {
+  window.location.href = "login.html";
+}
+getUsername(token);
 
 function getDepartment(id) {
   return $.ajax({
