@@ -10,11 +10,6 @@ export const createItemRoom = async (req: Request, res: Response) => {
     const exist = await ItemRoom.findOne({ where: { itemId, roomId } });
     const item = await Item.findOne({ where: { id:itemId } });
     const room = await Room.findOne({ where: { id:roomId } });
-    if (exist) {
-      return res.status(400).json({
-        message: `item with item ${itemId} and room ${roomId} already exist`, 
-      });
-    }
     if(!item){
         return res.status(400).json({
             message: `item with id ${itemId} not found`, 
@@ -24,6 +19,11 @@ export const createItemRoom = async (req: Request, res: Response) => {
         return res.status(400).json({
             message: `room with id ${roomId} not found`, 
           });
+    }
+    if (exist) {
+      return res.status(400).json({
+        message: `item with item ${itemId} and room ${roomId} already exist`, 
+      });
     }
     try {
       const itemroom =new ItemRoom();

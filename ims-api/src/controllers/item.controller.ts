@@ -9,6 +9,12 @@ export const createItem = async (req: Request, res: Response) => {
     //const {name} = req.params as any;
     const{categoryId,name}=req.body as any;
     const exist = await Item.findOne({ where: { name } });
+    const category = await Category.findOne({where: {id:categoryId} })
+    if(!category){
+      return res.status(400).json({
+        message: `category with id ${categoryId} not found`,
+      })
+    }
     if (exist) {
       return res.status(400).json({
         message: `item with name ${name} already exist`, 
