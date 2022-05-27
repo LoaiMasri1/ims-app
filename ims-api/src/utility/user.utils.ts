@@ -4,7 +4,8 @@ import * as jwt from "jsonwebtoken";
 export const sendConfirmationEmail = async (
   username: string,
   email: string,
-  token: string
+  token: string,
+  type:string
 ) => {
   const mailOptions = {
     from: `"IMS Supporter" <${process.env.GOOGLE_USER}>`,
@@ -12,7 +13,7 @@ export const sendConfirmationEmail = async (
     subject: "Confirm your email",
     html: `<h1>Hi ${username}</h1>
     <p>Please confirm your email by clicking the link below</p>
-    <a href="http://localhost:${process.env.PORT}/auth/v1/confirm/${token}">Confirm Email</a>
+    <a href="http://localhost:${process.env.PORT}/auth/v1/${type}/${token}">Confirm Email</a>
     <p>If you did not request this, please ignore this email</p>
     `,
   };

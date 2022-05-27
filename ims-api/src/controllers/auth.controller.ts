@@ -1,3 +1,4 @@
+import * as bcrypt from "bcrypt";
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
 import {
@@ -24,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
     });
-    await sendConfirmationEmail(user.username, user.email, token);
+    await sendConfirmationEmail(user.username, user.email, token,"confirm");
     res.status(400).json({
       message: "Please confirm your email , check your email",
     });
@@ -83,7 +84,7 @@ export const register = async (req: Request, res: Response) => {
           password: newUser.password,
           phone: newUser.phone,
         });
-        sendConfirmationEmail(newUser.username, newUser.email, token);
+        sendConfirmationEmail(newUser.username, newUser.email, token,"confirm");
         res.status(201).json({
           message: "User created successfully, please check your email",
         });
@@ -139,6 +140,64 @@ export const confirmUser = async (req: Request, res: Response) => {
     }
     return res.status(200).json({
       message: "User already confirmed",
+    });
+  }
+};
+export const checkEmail = async (req: Request, res: Response) => {
+  const {email} = req.body;
+  const userEmail = await User.findOne({ where: { email } });
+  if (!userEmail) {
+    return res.status(400).json({
+      message: `User with email ${email} Not exist`,
+    });
+  }
+  try {
+    const token = await generateToken({
+      username: userEmail.username,
+      email: userEmail.email,
+    });
+    await sendConfirmationEmail(userEmail.username, userEmail.email, token,"forgetPassword");
+    return res.status(201).json({
+      message: "check Email successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "check Email failed",
+      err: error,
+    });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  const {password} = req.body;
+  const{token}=req.params;
+  const {username,email}=await verifyToken(token) as any
+  const user= await User.findOne({ where: { email,username } });
+  if (!user) {
+    return res.status(400).json({
+      message: `User with email ${email} not exist`,
+    });
+  }
+  try {
+    user.password =  password
+    validate(user).then(async (errors) => {
+      if (errors.length > 0) {
+        const { constraints } = errors[0];
+        res.status(422).json({
+          message: objToString(constraints),
+        });
+      } else {
+      user.password =  await bcrypt.hash(password, 10);;
+       await user.save()
+        res.status(201).json({
+          message: "change password successfully",
+        });
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "change password failed",
+      err: error,
     });
   }
 };
