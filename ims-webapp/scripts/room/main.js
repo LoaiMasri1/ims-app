@@ -6,9 +6,12 @@ import {
   EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import { getUsers, getDepartments } from "../utils/utils.js";
+import { getUsers, getDepartments, getUsername } from "../utils/utils.js";
 const token = localStorage.getItem("token");
-console.log(token);
+if (!token) {
+  window.location.href = "login.html";
+}
+getUsername(token);
 
 function getRoom(id) {
   return $.ajax({

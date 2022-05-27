@@ -1,3 +1,4 @@
+import { generateToken, verifyToken } from "./../utility/user.utils";
 import { UserPassword } from "./../enums/user.enum";
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
@@ -167,7 +168,7 @@ export const Updateuser = async (req: Request, res: Response) => {
 
 export const getAllUser = async (req: Request, res: Response) => {
   const user = await User.find({
-    select: ["id", "username", "email", "phone"],
+    select: ["id", "username", "email", "phone", "role"],
     relations: { department: true },
     loadRelationIds: true,
   });
@@ -189,7 +190,7 @@ export const getAllUser = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { username, email, password, phone, departmentId } = req.body;
+  const { username, email, phone, departmentId } = req.body;
   const userEmail = await User.findOne({ where: { email } });
   const userPhone = await User.findOne({ where: { phone } });
   const department = await Department.findOne({ where: { id: departmentId } });
@@ -215,27 +216,29 @@ export const createUser = async (req: Request, res: Response) => {
     newUser.password = UserPassword.default;
     newUser.phone = phone;
     newUser.department = department;
-    sendConfirmationEmail(
-      newUser.username,
-      newUser.email,
-      newUser.confirmationCode
-    );
 
     validate(newUser).then(async (errors) => {
       if (errors.length > 0) {
         const { constraints } = errors[0];
-        res.status(422).json({
+        return res.status(422).json({
           message: objToString(constraints),
         });
       } else {
-        await newUser.save();
-        res.status(201).json({
+        const token = await generateToken({
+          username: newUser.username,
+          email: newUser.email,
+          password: newUser.password,
+          phone: newUser.phone,
+          department: newUser.department,
+        });
+        await sendConfirmationEmail(newUser.username, newUser.email, token);
+        return res.status(201).json({
           message: "User created successfully",
         });
       }
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "User creation failed",
       err: error,
     });

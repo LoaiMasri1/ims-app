@@ -23,7 +23,7 @@ function loginUser(e) {
     contentType: "application/json",
     success: function (data) {
       localStorage.setItem("token", data.token);
-      window.location = "department.html";
+      window.location = "item.html";
     },
     error: function (err) {
       const message = `<div class="alert alert-danger" role="alert">${err.responseJSON.message}</div>`;

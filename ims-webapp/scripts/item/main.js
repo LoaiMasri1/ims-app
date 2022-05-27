@@ -3,16 +3,16 @@ import {
   ITEM_URL,
   primaryColor,
   dangerColor,
+  EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import {
-  getCategorys,
-} from "../utils/utils.js";
+import { getCategorys, getUsername } from "../utils/utils.js";
 
 const token = localStorage.getItem("token");
-console.log(token);
-
-const EMPTY_MESSAGE = "999";
+if (!token) {
+  window.location.href = "login.html";
+}
+getUsername(token);
 
 function getItem(id) {
   return $.ajax({
@@ -82,12 +82,13 @@ export async function editItem(id) {
     cancelButtonColor: dangerColor,
     didOpen: async () => {
       const { category } = await getCategorys();
-      console.log(category)
       category.forEach((category) => {
         $("#Category").append(
           `<option value=${category.id} ${
             category.id === item.category ? "selected" : ""
-          }>${category.mainClassification}, ${category.subClassification}</option>`
+          }>${category.mainClassification}, ${
+            category.subClassification
+          }</option>`
         );
       });
     },
@@ -152,12 +153,13 @@ export async function addItem() {
       console.log(category);
 
       category.forEach((category) => {
-        $("#Category").append(`<option value=${category.id}>${category.mainClassification}, ${category.subClassification}</option>`);
+        $("#Category").append(
+          `<option value=${category.id}>${category.mainClassification}, ${category.subClassification}</option>`
+        );
       });
     },
   });
-  if(!data)
-    return
+  if (!data) return;
   if (data.categoryId === EMPTY_MESSAGE)
     return await Swal.fire("Error!", "Please Select Category", "error");
 

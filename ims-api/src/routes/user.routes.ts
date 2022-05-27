@@ -20,7 +20,7 @@ UserRouter.get("/email/:email", SearchByEmail);
 UserRouter.get("/phone/:phone", SearchByPhone);
 UserRouter.get("/:id", SearchById);
 UserRouter.put("/:id", Updateuser);
-UserRouter.delete("/:email", deleteUserbyEmail);
+UserRouter.delete("/email/:email", deleteUserbyEmail);
 UserRouter.delete("/:id", deleteUser);
 UserRouter.get("/", getAllUser);
 UserRouter.post("/", createUser);

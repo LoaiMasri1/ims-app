@@ -1,12 +1,18 @@
 import { deleteUser, editUser, addUser } from "./main.js";
 window._user = { deleteUser, editUser };
-import { USER_URL } from "../settings/settings.js";
+import { USER_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
     url: USER_URL,
     method: "GET",
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(
+        "authorization",
+        "Bearer " + localStorage.getItem("token")
+      );
+    },
     success: function (data) {
       const title = "User",
         { user } = data;
@@ -18,7 +24,9 @@ $(document).ready(function () {
                             <th>Email</th>
                             <th>Phone</th>
                             <th>department</th>
+                            <th>Role</th>
                             <th>Action's</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -31,6 +39,15 @@ $(document).ready(function () {
                                     <td>${user.email}</td>
                                     <td>${user.phone}</td>
                                     <td>${user.department?.name || null}</td>
+                                    <td>${
+                                      user.role
+                                        ? `<span class="badge bg-danger">
+                                          Admin
+                                        </span>`
+                                        : `<span class="badge bg-success">
+                                          Member
+                                        </span>`
+                                    }</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="window._user.editUser(${
                                           user.id
@@ -104,6 +121,12 @@ $(document).ready(function () {
           },
         ],
       });
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
+      setTimeout(() => {
+        window.location.href = "item.html";
+      }, DELAY - 1500);
     },
   });
 });

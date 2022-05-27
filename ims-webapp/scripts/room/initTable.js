@@ -1,12 +1,18 @@
 import { addRoom, deleteRoom, editRoom } from "./main.js";
 window._room = { deleteRoom, editRoom };
-import { ROOM_URL } from "../settings/settings.js";
+import { ROOM_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
   $.ajax({
     url: ROOM_URL,
     method: "GET",
     dataType: "json",
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader(
+        "authorization",
+        "Bearer " + localStorage.getItem("token")
+      );
+    },
     success: function (data) {
       const title = "Room",
         { room } = data;
@@ -27,8 +33,8 @@ $(document).ready(function () {
                                 <tr class="text-center">
                                     <td>${room.id}</td>
                                     <td>${room.type}</td>
-                                    <td>${room.user}</td>
-                                    <td>${room.department}</td>
+                                    <td>${room.user.username}</td>
+                                    <td>${room.department.name}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="window._room.editRoom(${room.id})">
                                             <i class="fa fa-edit"></i>
@@ -94,10 +100,16 @@ $(document).ready(function () {
           {
             text: '<i class="fa fa-plus"></i> Add',
             className: "add-btn",
-            action: addRoom
+            action: addRoom,
           },
         ],
       });
+    },
+    error: function (err) {
+      Swal.fire("Error", err.responseJSON.message, "error");
+      setTimeout(() => {
+        window.location.href = "item.html";
+      }, DELAY - 1500);
     },
   });
 });

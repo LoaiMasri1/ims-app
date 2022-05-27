@@ -1,4 +1,8 @@
-import { DEPARTMENT_URL, USER_URL, CATEGORY_URL } from "../settings/settings.js";
+import {
+  DEPARTMENT_URL,
+  USER_URL,
+  CATEGORY_URL,
+} from "../settings/settings.js";
 
 const token = localStorage.getItem("token");
 
@@ -65,3 +69,17 @@ export function getCategorys() {
   });
 }
 
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return e;
+  }
+}
+
+export function getUsername(token) {
+  const { username } = parseJwt(token);
+  $("#menu").prepend(
+    `<li class="dropdown-item pe-none text-secondary"><i class="fas fa-user"></i> <strong>${username}</strong></li>`
+  );
+}

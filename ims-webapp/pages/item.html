@@ -47,15 +47,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="room.html">Room</a>
                     </li>
-    
+
                     <li class="nav-item dropdown ms-sm-0 ms-md-auto ">
                         <a class="nav-link dropdown-toggle d-lg-flex align-items-lg-center text-primary" href="#"
                             id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-gear text-primary fs-5"></i>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><button class="dropdown-item"
-                                    onclick="localStorage.clear('token');window.location.href = 'login.html';">LogOut</button>
+                        <ul class="dropdown-menu" id="menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a href="#" class="dropdown-item"><i class="fas fa-lock text-secondary"></i> Change
+                                    Password</a></li>
+                            <li class=" border-top"><button class="dropdown-item"
+                                    onclick="localStorage.clear('token');window.location.href = 'login.html';"><i
+                                        class="fas fa-sign-out-alt text-secondary"></i> LogOut</button></span>
                             </li>
                         </ul>
                     </li>
@@ -70,39 +73,8 @@
         <table id="myTable" class="table table-responsive"></table>
     </div>
 
-    <!-- modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Item</h5>
-                    <button type="button" class="close btn" onclick="$('#addModal').modal('hide')">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add-form">
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" class="form-control" name="name" required />
-                        </div>
-                        <div class="form-outline mb-4">
-                            <label class="form-label" for="categoryId">CategoryId</label>
-                            <input type="number" id="categoryId" class="form-control" name="categoryId" required />
-                        </div>
-                        <div class="form-outline mb-4 text-center">
-                            <button type="submit" class="btn btn-primary w-50">Add
-                                Item</button>
-                        </div>
-                        <div class="form-outline mb-4 text-center" id="add-success"></div>
-                        <div class="form-outline mb-4 text-center" id="add-errors"></div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- ============ -->
 
+    <!-- ============ -->
 
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/70efa33b16.js" crossorigin="anonymous"></script>
