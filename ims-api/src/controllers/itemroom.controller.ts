@@ -93,7 +93,7 @@ export const createItemRoom = async (req: Request, res: Response) => {
     }
   };
   export const getAllItemRoom =async (req: Request, res: Response) => {
-    const itemroom = await ItemRoom.find();;
+    const itemroom = await ItemRoom.find({relations: {item:true, room:true}});;
     if(!itemroom){
       return res.status(400).json({
         message: `not found any item`,
@@ -105,6 +105,26 @@ export const createItemRoom = async (req: Request, res: Response) => {
     }catch (error) {
       res.status(500).json({
         message: "  Failed to search for item",
+        err: error,
+      });
+    }
+  };
+
+  export const getItemRoom = async (req: Request, res: Response) => {
+    const { itemId,roomId } = req.params as any;
+    const itemroom = await ItemRoom.findOne({ where: { roomId,itemId } });
+    if (!itemroom) {
+      return res.status(400).json({
+        message: `item with item ${itemId} and room ${roomId} not found`,
+      });
+    }
+    try {
+      res.status(201).json({
+        itemroom
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "itemroom update failed",
         err: error,
       });
     }

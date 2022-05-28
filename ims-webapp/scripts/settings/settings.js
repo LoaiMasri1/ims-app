@@ -7,6 +7,7 @@ export const ROOM_URL = BASE_URL + "room";
 export const REGISTER_URL = AUTH_URL + "register";
 export const USER_URL = BASE_URL + "user";
 export const ITEM_URL = BASE_URL + "item";
+export const ITEMROOM_URL = BASE_URL + "itemRoom";
 export const CATEGORY_URL = BASE_URL + "category";
 export const EMPTY_MESSAGE = "999";
 export const DELAY = 3000;
