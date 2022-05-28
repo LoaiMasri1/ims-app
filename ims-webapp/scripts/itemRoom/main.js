@@ -7,12 +7,12 @@ import {
     EMPTY_MESSAGE,
   } from "../settings/settings.js";
   
-  import { getRoom, getItem } from "../utils/utils.js";
+  import { getRoom, getItem, getUsername } from "../utils/utils.js";
   const token = localStorage.getItem("token");
   if (!token) {
     window.location.href = "login.html";
   }
-  
+  getUsername(token);
   
   function getItemRoom(itemId, roomId) {
     return $.ajax({

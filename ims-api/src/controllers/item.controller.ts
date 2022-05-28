@@ -138,12 +138,17 @@ export const deleteItembyid = async (req: Request, res: Response) => {
   const { id } = req.params as any;
   const item = await Item.findOne({
     where: { id },
-    relations: { category: true },
+    relations: { category: true, itemRoom: true },
     loadRelationIds: true,
   });
   if (!item) {
     return res.status(400).json({
       message: `item with id ${id} not found`,
+    });
+  }
+  if(item.itemRoom.length>0){
+    return res.status(400).json({
+      message: `item with id ${id} already in room`,
     });
   }
   try {
