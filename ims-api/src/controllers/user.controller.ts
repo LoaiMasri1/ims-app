@@ -231,7 +231,7 @@ export const createUser = async (req: Request, res: Response) => {
           phone: newUser.phone,
           department: newUser.department,
         });
-        await sendConfirmationEmail(newUser.username, newUser.email, token,"confirm");
+        await sendConfirmationEmail(newUser.username, newUser.email, token);
         return res.status(201).json({
           message: "User created successfully",
         });

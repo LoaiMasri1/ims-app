@@ -6,6 +6,7 @@ import {
   objToString,
   verifyToken,
   generateToken,
+  sendPasswordResetEmail,
 } from "../utility/user.utils";
 
 import { UserStatus } from "../enums/user.enum";
@@ -25,7 +26,7 @@ export const login = async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
     });
-    await sendConfirmationEmail(user.username, user.email, token,"confirm");
+    await sendConfirmationEmail(user.username, user.email, token);
     res.status(400).json({
       message: "Please confirm your email , check your email",
     });
@@ -84,7 +85,7 @@ export const register = async (req: Request, res: Response) => {
           password: newUser.password,
           phone: newUser.phone,
         });
-        sendConfirmationEmail(newUser.username, newUser.email, token,"confirm");
+        sendConfirmationEmail(newUser.username, newUser.email, token);
         res.status(201).json({
           message: "User created successfully, please check your email",
         });
@@ -143,61 +144,96 @@ export const confirmUser = async (req: Request, res: Response) => {
     });
   }
 };
-export const checkEmail = async (req: Request, res: Response) => {
-  const {email} = req.body;
-  const userEmail = await User.findOne({ where: { email } });
-  if (!userEmail) {
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email, newPassword } = req.body;
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
     return res.status(400).json({
-      message: `User with email ${email} Not exist`,
+      message: "User with this email does not exist",
+    });
+  } else {
+    try {
+      const isMatch = await user.comparePassword(newPassword);
+      if (isMatch) {
+        return res.status(400).json({
+          message: "New password must be different from old password",
+        });
+      }
+      const token = await generateToken({
+        username: user.username,
+        email: user.email,
+        newPassword: newPassword,
+      });
+      await sendPasswordResetEmail(user.username, user.email, token);
+      return res.status(200).json({
+        message: "Password reset link sent to your email",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Password reset failed",
+        err: error,
+      });
+    }
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  const decoded = (await verifyToken(token)) as any;
+  if (!decoded) {
+    return res.status(400).json({
+      message: "Invalid token",
     });
   }
-  try {
-    const token = await generateToken({
-      username: userEmail.username,
-      email: userEmail.email,
+  const { username, email, newPassword } = decoded;
+  const user = await User.findOne({ where: { username, email } });
+  if (!user) {
+    return res.status(400).json({
+      message: "User with this email does not exist",
     });
-    await sendConfirmationEmail(userEmail.username, userEmail.email, token,"forgetPassword");
-    return res.status(201).json({
-      message: "check Email successfully",
+  }
+
+  const isMatch = await bcrypt.compare(newPassword, user.password);
+  if (isMatch) {
+    return res.status(400).json({
+      message: "New password cannot be same as old password",
     });
-  } catch (error) {
-    return res.status(500).json({
-      message: "check Email failed",
-      err: error,
+  } else {
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    return res.status(200).json({
+      message: "Password reset successful",
     });
   }
 };
 
 export const changePassword = async (req: Request, res: Response) => {
-  const {password} = req.body;
-  const{token}=req.params;
-  const {username,email}=await verifyToken(token) as any
-  const user= await User.findOne({ where: { email,username } });
+  const { token } = req.params;
+  const { oldPassword, newPassword } = req.body;
+
+  const decoded = (await verifyToken(token)) as any;
+  if (!decoded) {
+    return res.status(400).json({
+      message: "Invalid token",
+    });
+  }
+  const { username, email } = decoded;
+  const user = await User.findOne({ where: { username, email } });
   if (!user) {
     return res.status(400).json({
-      message: `User with email ${email} not exist`,
+      message: "User with this email does not exist",
     });
   }
-  try {
-    user.password =  password
-    validate(user).then(async (errors) => {
-      if (errors.length > 0) {
-        const { constraints } = errors[0];
-        res.status(422).json({
-          message: objToString(constraints),
-        });
-      } else {
-      user.password =  await bcrypt.hash(password, 10);;
-       await user.save()
-        res.status(201).json({
-          message: "change password successfully",
-        });
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "change password failed",
-      err: error,
+
+  const isMatch = await user.comparePassword(oldPassword);
+  if (!isMatch) {
+    return res.status(400).json({
+      message: "Old password is incorrect",
     });
   }
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return res.status(200).json({
+    message: "Password changed successfully",
+  });
 };
