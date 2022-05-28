@@ -11,7 +11,6 @@ export const DepartmentRouter: Router = Router({
   strict: true,
 });
 DepartmentRouter.get("/:id", searchbyId);
-//DepartmentRouter.get("/:floor", searchbyFloor);
 DepartmentRouter.put("/:id", updateDepartment);
 DepartmentRouter.post("/", createDepartment);
 DepartmentRouter.get("/", getAll);

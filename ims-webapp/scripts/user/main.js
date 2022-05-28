@@ -75,7 +75,7 @@ export async function editUser(id) {
   const { user } = await getUser(id),
     { username, email, phone } = user;
   const { value: data } = await Swal.fire({
-    title: "Edit Category",
+    title: "Edit User",
     html: `<input type="text" id="username" class="swal2-input w-75"  value=${username}>
            <input type="email" id="email" class="swal2-input w-75" value=${email}>
            <input type="text" id="phone" class="swal2-input w-75" value=${phone}>
@@ -87,7 +87,7 @@ export async function editUser(id) {
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
-    confirmButtonText: "Add",
+    confirmButtonText: "Edit",
     confirmButtonColor: primaryColor,
     cancelButtonColor: dangerColor,
     didOpen: async () => {
@@ -95,7 +95,7 @@ export async function editUser(id) {
       department.forEach((department) => {
         $("#department").append(
           `<option value=${department.id} ${
-            department.id === user.department ? "selected" : ""
+            department.id === user.department.id ? "selected" : ""
           } >${department.name}</option>`
         );
       });

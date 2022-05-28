@@ -7,7 +7,6 @@ export const AuthRouter: Router = Router({
 AuthRouter.post("/login", login);
 AuthRouter.post("/register", register);
 AuthRouter.get("/confirm/:token", confirmUser);
-//AuthRouter.get("/logout",isLoggedIn, logout);
 AuthRouter.post("/forgetPassword", forgotPassword);
 AuthRouter.get("/resetPassword/:token", resetPassword);
 AuthRouter.post("/changePassword/:token", changePassword);
