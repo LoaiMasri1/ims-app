@@ -1,3 +1,4 @@
+import * as bcrypt from "bcrypt";
 import { User } from "./../entities/user.entity";
 import { Request, Response } from "express";
 import {
@@ -5,6 +6,7 @@ import {
   objToString,
   verifyToken,
   generateToken,
+  sendPasswordResetEmail,
 } from "../utility/user.utils";
 
 import { UserStatus } from "../enums/user.enum";
@@ -141,4 +143,97 @@ export const confirmUser = async (req: Request, res: Response) => {
       message: "User already confirmed",
     });
   }
+};
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email, newPassword } = req.body;
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return res.status(400).json({
+      message: "User with this email does not exist",
+    });
+  } else {
+    try {
+      const isMatch = await user.comparePassword(newPassword);
+      if (isMatch) {
+        return res.status(400).json({
+          message: "New password must be different from old password",
+        });
+      }
+      const token = await generateToken({
+        username: user.username,
+        email: user.email,
+        newPassword: newPassword,
+      });
+      await sendPasswordResetEmail(user.username, user.email, token);
+      return res.status(200).json({
+        message: "Password reset link sent to your email",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Password reset failed",
+        err: error,
+      });
+    }
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  const decoded = (await verifyToken(token)) as any;
+  if (!decoded) {
+    return res.status(400).json({
+      message: "Invalid token",
+    });
+  }
+  const { username, email, newPassword } = decoded;
+  const user = await User.findOne({ where: { username, email } });
+  if (!user) {
+    return res.status(400).json({
+      message: "User with this email does not exist",
+    });
+  }
+
+  const isMatch = await bcrypt.compare(newPassword, user.password);
+  if (isMatch) {
+    return res.status(400).json({
+      message: "New password cannot be same as old password",
+    });
+  } else {
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    return res.status(200).json({
+      message: "Password reset successful",
+    });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  const { oldPassword, newPassword } = req.body;
+
+  const decoded = (await verifyToken(token)) as any;
+  if (!decoded) {
+    return res.status(400).json({
+      message: "Invalid token",
+    });
+  }
+  const { username, email } = decoded;
+  const user = await User.findOne({ where: { username, email } });
+  if (!user) {
+    return res.status(400).json({
+      message: "User with this email does not exist",
+    });
+  }
+
+  const isMatch = await user.comparePassword(oldPassword);
+  if (!isMatch) {
+    return res.status(400).json({
+      message: "Old password is incorrect",
+    });
+  }
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return res.status(200).json({
+    message: "Password changed successfully",
+  });
 };

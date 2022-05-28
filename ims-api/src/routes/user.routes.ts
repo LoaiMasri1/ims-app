@@ -24,3 +24,4 @@ UserRouter.delete("/email/:email", deleteUserbyEmail);
 UserRouter.delete("/:id", deleteUser);
 UserRouter.get("/", getAllUser);
 UserRouter.post("/", createUser);
+
