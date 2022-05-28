@@ -33,13 +33,23 @@ $(document).ready(function () {
                                 <tr class="text-center">
                                     <td>${room.id}</td>
                                     <td>${room.type}</td>
-                                    <td>${room.user.username}</td>
-                                    <td>${room.department.name}</td>
+                                    <td>${
+                                      room.user ? room.user.username : null
+                                    }</td>
+                                    <td>${
+                                      room.department
+                                        ? room.department.name
+                                        : null
+                                    }</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="window._room.editRoom(${room.id})">
+                                        <button class="btn btn-primary btn-sm" onclick="window._room.editRoom(${
+                                          room.id
+                                        })">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="window._room.deleteRoom(${room.id})">
+                                        <button class="btn btn-danger btn-sm" onclick="window._room.deleteRoom(${
+                                          room.id
+                                        })">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -106,7 +116,7 @@ $(document).ready(function () {
       });
     },
     error: function (err) {
-      Swal.fire("Error", err.responseJSON.message, "error");
+      Swal.fire("Error", err.responseJSON?.message, "error");
       setTimeout(() => {
         window.location.href = "item.html";
       }, DELAY - 1500);

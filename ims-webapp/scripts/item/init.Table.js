@@ -34,12 +34,22 @@ $(document).ready(function () {
                                     <td>${item.id}</td>
                                     <td>${item.name}</td>
 
-                                    <td>${item.category.mainClassification},${item.category.subClassification}</td>
+                                    <td>${
+                                      item.category
+                                        ? item.category.mainClassification +
+                                          "," +
+                                          item.category.subClassification
+                                        : null
+                                    }</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="window._item.editItem(${item.id})">
+                                        <button class="btn btn-primary btn-sm" onclick="window._item.editItem(${
+                                          item.id
+                                        })">
                                             <i class="fa fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="window._item.deleteItem(${item.id})">
+                                        <button class="btn btn-danger btn-sm" onclick="window._item.deleteItem(${
+                                          item.id
+                                        })">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>

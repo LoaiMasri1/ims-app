@@ -70,7 +70,9 @@ export class User extends BaseEntity {
   @OneToOne(() => Room, (room) => room.user)
   room: Room;
 
-  @ManyToOne(() => Department, (department) => department.user)
+  @ManyToOne(() => Department, (department) => department.user, {
+    onDelete: "SET NULL",
+  })
   department: Department;
 
   @BeforeInsert()

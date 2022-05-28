@@ -19,7 +19,9 @@ export class Item extends BaseEntity {
   @IsNotEmpty()
   name: string;
 
-  @ManyToOne(() => Category, (Category) => Category.item)
+  @ManyToOne(() => Category, (Category) => Category.item, {
+    onDelete: "SET NULL",
+  })
   category: Category;
 
   @OneToMany(() => ItemRoom, (itemRoom) => itemRoom.item)

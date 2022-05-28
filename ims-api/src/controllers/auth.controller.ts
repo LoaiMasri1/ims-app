@@ -38,7 +38,7 @@ export const login = async (req: Request, res: Response) => {
       });
     } else {
       const token = await generateToken({
-        id: user.userId,
+        id: user.id,
         username: user.username,
         email: user.email,
         role: user.role,
@@ -144,6 +144,7 @@ export const confirmUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const forgotPassword = async (req: Request, res: Response) => {
   const { email, newPassword } = req.body;
   const user = await User.findOne({ where: { email } });
@@ -159,14 +160,24 @@ export const forgotPassword = async (req: Request, res: Response) => {
           message: "New password must be different from old password",
         });
       }
-      const token = await generateToken({
-        username: user.username,
-        email: user.email,
-        newPassword: newPassword,
-      });
-      await sendPasswordResetEmail(user.username, user.email, token);
-      return res.status(200).json({
-        message: "Password reset link sent to your email",
+      user.password = newPassword;
+      validate(user).then(async (errors) => {
+        if (errors.length > 0) {
+          const { constraints } = errors[0];
+          return res.status(422).json({
+            message: objToString(constraints),
+          });
+        } else {
+          const token = await generateToken({
+            username: user.username,
+            email: user.email,
+            newPassword: newPassword,
+          });
+          await sendPasswordResetEmail(user.username, user.email, token);
+          return res.status(200).json({
+            message: "Password reset link sent to your email",
+          });
+        }
       });
     } catch (error) {
       return res.status(500).json({
@@ -193,18 +204,11 @@ export const resetPassword = async (req: Request, res: Response) => {
     });
   }
 
-  const isMatch = await bcrypt.compare(newPassword, user.password);
-  if (isMatch) {
-    return res.status(400).json({
-      message: "New password cannot be same as old password",
-    });
-  } else {
-    user.password = await bcrypt.hash(newPassword, 10);
-    await user.save();
-    return res.status(200).json({
-      message: "Password reset successful",
-    });
-  }
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return res.status(200).json({
+    message: "Password reset successful",
+  });
 };
 
 export const changePassword = async (req: Request, res: Response) => {
@@ -231,9 +235,26 @@ export const changePassword = async (req: Request, res: Response) => {
       message: "Old password is incorrect",
     });
   }
-  user.password = await bcrypt.hash(newPassword, 10);
-  await user.save();
-  return res.status(200).json({
-    message: "Password changed successfully",
+
+  const isMatchNew = await user.comparePassword(newPassword);
+  if (isMatchNew) {
+    return res.status(400).json({
+      message: "New password must be different from old password",
+    });
+  }
+  user.password = newPassword;
+  validate(user).then(async (errors) => {
+    if (errors.length > 0) {
+      const { constraints } = errors[0];
+      return res.status(422).json({
+        message: objToString(constraints),
+      });
+    } else {
+      user.password = await bcrypt.hash(newPassword, 10);
+      await user.save();
+      return res.status(200).json({
+        message: "Password changed successfully",
+      });
+    }
   });
 };

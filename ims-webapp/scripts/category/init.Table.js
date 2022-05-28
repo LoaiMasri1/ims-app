@@ -105,7 +105,11 @@ $(document).ready(function () {
       });
     },
     error: function (err) {
-      Swal.fire("Error", err.responseJSON.message, "error");
+      Swal.fire(
+        "Error",
+        err.responseJSON?.message || "There is a Error",
+        "error"
+      );
       setTimeout(() => {
         window.location.href = "item.html";
       }, DELAY - 1500);

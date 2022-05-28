@@ -124,6 +124,11 @@ export function getUsername(token) {
   );
 }
 
+export function getUserId(userId) {
+  const { id } = parseJwt(token);
+  return id;
+}
+
 export function getRoomById(id) {
   return $.ajax({
     url: `${ROOM_URL}/${id}`,

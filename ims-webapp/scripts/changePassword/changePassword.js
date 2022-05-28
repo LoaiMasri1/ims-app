@@ -1,12 +1,15 @@
-import { DELAY, FORGET_PASSWORD_URL } from "../settings/settings.js";
+import { CHANGE_PASSWORD_URL, DELAY } from "../settings/settings.js";
 
-function forgetPassword(e) {
+const token = localStorage.getItem("token");
+
+function changePassword(e) {
   e.preventDefault();
   const form = e.target;
-  const password = form.password.value,
-    confirmPassword = form.password_confirmation.value,
-    email = form.email.value;
-  if (password !== confirmPassword) {
+  const newPassword = form.newPassword.value,
+    confirmPassword = form.confirmPassword.value,
+    currentPassword = form.currentPassword.value;
+
+  if (newPassword !== confirmPassword) {
     const message =
       "<div class='alert alert-danger text-center'>Password's Not Match</div>";
     $("#error").append(message);
@@ -16,11 +19,12 @@ function forgetPassword(e) {
     return;
   }
   const data = {
-    email: email,
-    newPassword: password,
+    oldPassword: currentPassword,
+    newPassword: newPassword,
   };
+
   $.ajax({
-    url: FORGET_PASSWORD_URL,
+    url: `${CHANGE_PASSWORD_URL}/${token}`,
     type: "POST",
     data: data,
     success: function (data) {
@@ -28,6 +32,7 @@ function forgetPassword(e) {
       $("#message").append(message);
       setTimeout(() => {
         $("#message").empty();
+        localStorage.removeItem("token");
         window.location.href = "login.html";
       }, DELAY);
     },
@@ -41,4 +46,4 @@ function forgetPassword(e) {
   });
 }
 
-$("#forget-form").submit(forgetPassword);
+$("#changePassword-form").submit(changePassword);

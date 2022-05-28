@@ -22,11 +22,15 @@ export class Room extends BaseEntity {
   @IsNotEmpty()
   type: string;
 
-  @OneToOne(() => User, (user) => user.room)
+  @OneToOne(() => User, (user) => user.room, {
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Department, (department) => department.room)
+  @ManyToOne(() => Department, (department) => department.room, {
+    onDelete: "SET NULL",
+  })
   department: Department;
 
   @OneToMany(() => ItemRoom, (itemRoom) => itemRoom.room)

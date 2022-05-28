@@ -6,7 +6,7 @@ import {
   EMPTY_MESSAGE,
 } from "../settings/settings.js";
 
-import { getDepartments, getUsername } from "../utils/utils.js";
+import { getDepartments, getUserId, getUsername } from "../utils/utils.js";
 
 const token = localStorage.getItem("token");
 if (!token) {
@@ -29,6 +29,17 @@ function getUser(id) {
 }
 
 export function deleteUser(id) {
+  const userId = getUserId(id);
+  console.log(userId, id);
+  if (id === userId) {
+    Swal.fire({
+      title: "Error",
+      text: "You can't delete yourself",
+      icon: "error",
+    });
+    return;
+  }
+
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",

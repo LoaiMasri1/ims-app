@@ -245,12 +245,23 @@ export const DeleteRoombydepartment = async (req: Request, res: Response) => {
 
 export const DeleteRoom = async (req: Request, res: Response) => {
   const { id } = req.params as any;
-  const room = (await Room.findOne({ where: { id } })) as any;
+  const room = (await Room.findOne({
+    where: { id },
+    relations: { itemRoom: true },
+  })) as any;
+
   if (!room) {
     return res.status(400).json({
       message: `Room with id ${id} Not Found`,
     });
   }
+
+  if (room.itemRoom.length > 0) {
+    return res.status(400).json({
+      message: `Room with id ${id} has at least one item`,
+    });
+  }
+
   try {
     room.remove();
     res.status(201).json({
