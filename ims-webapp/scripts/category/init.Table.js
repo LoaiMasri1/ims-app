@@ -1,8 +1,14 @@
 import { addCategory, deleteCategory, editCategory } from "./main.js";
 window._category = { deleteCategory, editCategory };
+import { parseJwt } from "../utils/utils.js";
 import { CATEGORY_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
+  let token = localStorage.getItem("token");
+  const { role } = parseJwt(token);
+  if (role) {
+    $('.display').css('display', 'block');
+  }
   $.ajax({
     url: CATEGORY_URL,
     method: "GET",
