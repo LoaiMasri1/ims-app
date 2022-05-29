@@ -13,7 +13,7 @@ function loginUser(e) {
   e.preventDefault();
   const form = e.target;
   const user = {
-    email: form.email.value,
+    username: form.username.value,
     password: form.password.value,
   };
   $.ajax({

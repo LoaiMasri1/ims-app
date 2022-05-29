@@ -92,10 +92,11 @@ export async function editUser(id) {
     cancelButtonColor: dangerColor,
     didOpen: async () => {
       const { department } = await getDepartments();
+
       department.forEach((department) => {
         $("#department").append(
           `<option value=${department.id} ${
-            department.id === user.department.id ? "selected" : ""
+            department.id === user.department?.id ? "selected" : ""
           } >${department.name}</option>`
         );
       });
