@@ -1,8 +1,14 @@
 import { addItemRoom, deleteItemRoom, editItemRoom } from "./main.js";
 window._itemRoom = { deleteItemRoom, editItemRoom };
+import { parseJwt } from "../utils/utils.js";
 import { ITEMROOM_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
+  let token = localStorage.getItem("token");
+  const { role } = parseJwt(token);
+  if (role) {
+    $('.display').css('display', 'block');
+  }
   $.ajax({
     url: ITEMROOM_URL,
     method: "GET",

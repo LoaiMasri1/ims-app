@@ -1,5 +1,6 @@
 import { addRoom, deleteRoom, editRoom } from "./main.js";
 window._room = { deleteRoom, editRoom };
+import { parseJwt } from "../utils/utils.js";
 import { ROOM_URL, DELAY } from "../settings/settings.js";
 
 $(document).ready(function () {
