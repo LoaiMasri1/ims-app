@@ -9,7 +9,7 @@ import { Category } from "../entities/category.entity";
 import { config } from "dotenv";
 config();
 export const Database = new DataSource({
-  type: process.env.DB_TYPE as any,
+  type: "mysql",
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
