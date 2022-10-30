@@ -51,6 +51,14 @@ The General Objectives of the Energy and Natural Resources Authority are charact
 - [Mohammed Hmouda](https://github.com/mhammadHmouda)
 - [Muthana Abo Alez](https://github.com/muthana-abo-alez1)
 - [Maya Abdoh](https://github.com/maya-abdoh)
+
+### Demo
+- the website : https://loaimasri1.github.io/ims-webapp/
+- I have two users with permissions
+- username: `admin` password: `Admin1234`
+- username: `user` password: `User1234`
+
+
  
 
  ## 🛠 Skills
