@@ -4,10 +4,10 @@ import * as jwt from "jsonwebtoken";
 export const sendConfirmationEmail = async (
   username: string,
   email: string,
-  token: string,
+  token: string
 ) => {
   const mailOptions = {
-    from: `"IMS Supporter" <${process.env.GOOGLE_USER}>`,
+    from: `"IMS Supporter" <${process.env.MAIL_USER}>`,
     to: email,
     subject: "Confirm your email",
     html: `<h1>Hi ${username}</h1>
@@ -47,7 +47,7 @@ export const sendPasswordResetEmail = async (
   token: string
 ) => {
   const mailOptions = {
-    from: `"IMS Supporter" <${process.env.GOOGLE_USER}>`,
+    from: `"IMS Supporter" <${process.env.MAIL_USER}>`,
     to: email,
     subject: "Reset your password",
     html: `<h1>Hi ${username}</h1>

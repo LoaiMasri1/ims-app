@@ -1,6 +1,6 @@
+import "reflect-metadata";
 import { ItemRoom } from "./../entities/itemroom.entity";
 import { User } from "../entities/user.entity";
-import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Department } from "../entities/department.entity";
 import { Room } from "../entities/room.entity";
@@ -18,6 +18,4 @@ export const Database = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Department, Room, Item, Category, ItemRoom],
-  migrations: [],
-  subscribers: [],
 });

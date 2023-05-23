@@ -86,6 +86,7 @@ export const register = async (req: Request, res: Response) => {
           phone: newUser.phone,
         });
         sendConfirmationEmail(newUser.username, newUser.email, token);
+        await newUser.save();
         res.status(201).json({
           message: "User created successfully, please check your email",
         });

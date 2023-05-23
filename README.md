@@ -51,7 +51,63 @@ The General Objectives of the Energy and Natural Resources Authority are charact
 - [Mohammed Hmouda](https://github.com/mhammadHmouda)
 - [Muthana Abo Alez](https://github.com/muthana-abo-alez1)
 - [Maya Abdoh](https://github.com/maya-abdoh)
- 
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/LoaiMasri1/ims-app
+```
+
+Go to the project directory
+
+```bash
+  cd ims-app/ims-api
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Create .env file and add your database url
+
+```bash
+  touch .env
+```
+
+Add these lines to .env file and replace the values with yours at the root of the project
+
+```bash
+  PORT=YOUR_PORT (default: 5000)
+  DB_TYPE=YOUR_DB_TYPE (default: mysql)
+  DB_HOST=YOUR_DB_HOST (default: localhost)
+  DB_PORT= YOUR_DB_PORT (default: 3306)
+  DB_USER=YOUR_DB_USER (default: root)
+  DB_PASSWORD=YOUR_DB_PASSWORD
+  DB_NAME=YOUR_DB_NAME
+
+  MAIL_SERVICE= YOUR_MAIL_SERVICE (default: gmail)
+  MAIL_USER=YOUR_MAIL_USER
+  MAIL_PASSWORD=YOUR_MAIL_PASSWORD
+  JWT_SECRET=YOUR_JWT_SECRET
+```
+
+
+Start the server
+
+```bash
+  npm run start
+```
+Then go to the client directory
+
+```bash
+  cd ims-app/ims-webapp
+```
+
+Run the client using the Open Live Server extension in VSCode or any other way
 
  ## 🛠 Skills
 Front-End,Back-End,Node Js,Express Js....
